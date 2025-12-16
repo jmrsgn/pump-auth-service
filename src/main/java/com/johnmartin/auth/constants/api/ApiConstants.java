@@ -6,8 +6,8 @@ public class ApiConstants {
 
     public static class Path {
         public static final String API_BASE_V1 = "/api/v1";
+        public static final String API_BASE_V1_INTERNAL = "/api/v1/internal";
         public static final String HEALTH = "/health";
-        public static final String INTERNAL = "/internal";
         public static final String VALIDATE = "/validate";
 
         // Auth
@@ -15,7 +15,7 @@ public class ApiConstants {
         public static final String LOGIN = "/login";
         public static final String REGISTER = "/register";
 
-        public static final String API_AUTH_INTERNAL = API_BASE_V1 + INTERNAL + "/auth";
+        public static final String API_AUTH_INTERNAL = API_BASE_V1_INTERNAL + "/auth";
     }
 
     public static class Error {

@@ -89,7 +89,7 @@ public class JwtUtil {
 
         try {
             String userId = getClaimsSubject(token);
-            return userRepository.findById(userId)
+            return userRepository.findByEmail(userId)
                                  .orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.USER_NOT_FOUND));
 
         } catch (JwtException | IllegalArgumentException e) {

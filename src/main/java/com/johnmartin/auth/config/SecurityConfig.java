@@ -35,7 +35,8 @@ public class SecurityConfig {
 
             // This allows Public APIs (login/register), Internal (service-to-service) APIs and Health for status update
             .authorizeHttpRequests(authorize -> authorize.requestMatchers(ApiConstants.Path.API_AUTH + "/**",
-                                                                          ApiConstants.Path.INTERNAL + "/**",
+                                                                          ApiConstants.Path.API_BASE_V1_INTERNAL
+                                                                                                              + "/**",
                                                                           ApiConstants.Path.HEALTH)
                                                          .permitAll()
                                                          .anyRequest()
