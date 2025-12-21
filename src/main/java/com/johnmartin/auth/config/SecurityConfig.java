@@ -12,20 +12,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.johnmartin.auth.constants.api.ApiConstants;
 import com.johnmartin.auth.security.JwtAuthenticationFilter;
-import com.johnmartin.auth.security.custom.CustomAccessDeniedHandler;
-import com.johnmartin.auth.security.custom.CustomAuthEntityPoint;
 
 @Configuration
 public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @Autowired
-    private CustomAuthEntityPoint customAuthEntityPoint;
-
-    @Autowired
-    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,15 +27,10 @@ public class SecurityConfig {
 
             // This allows Public APIs (login/register), Internal (service-to-service) APIs and Health for status update
             .authorizeHttpRequests(authorize -> authorize.requestMatchers(ApiConstants.Path.API_AUTH + "/**",
-                                                                          ApiConstants.Path.API_BASE_V1_INTERNAL
-                                                                                                              + "/**",
                                                                           ApiConstants.Path.HEALTH)
                                                          .permitAll()
                                                          .anyRequest()
                                                          .authenticated())
-
-            .exceptionHandling(ex -> ex.authenticationEntryPoint(customAuthEntityPoint))
-            .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .httpBasic(basic -> basic.realmName(ApiConstants.APP_NAME));
 

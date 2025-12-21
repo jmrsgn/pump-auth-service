@@ -1,5 +1,7 @@
 package com.johnmartin.auth.controllers.internal;
 
+import com.johnmartin.auth.constants.api.ApiErrorMessages;
+import com.johnmartin.auth.utils.ApiErrorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,10 @@ public class InternalAuthController {
     @PostMapping(ApiConstants.Path.VALIDATE)
     public ResponseEntity<UserResponse> validateToken(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", StringUtils.EMPTY);
+        if (StringUtils.isBlank(token)) {
+            ApiErrorUtils.createUnauthorizedErrorResponse(ApiErrorMessages.USER_IS_NOT_AUTHENTICATED);
+        }
+
         UserEntity user = jwtUtil.validateTokenAndGetUser(token);
         return ResponseEntity.ok(UserMapper.toResponse(user));
     }
