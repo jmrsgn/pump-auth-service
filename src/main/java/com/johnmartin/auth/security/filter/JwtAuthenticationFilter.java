@@ -1,8 +1,9 @@
-package com.johnmartin.auth.security;
+package com.johnmartin.auth.security.filter;
 
 import java.io.IOException;
 import java.util.Collections;
 
+import com.johnmartin.auth.security.JwtUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

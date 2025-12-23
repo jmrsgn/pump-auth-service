@@ -23,7 +23,7 @@ import io.micrometer.common.util.StringUtils;
 @Service
 public class AuthService {
 
-    private static final String DEBUG_TAG = AuthService.class.getSimpleName();
+    private final Class<AuthService> clazz = AuthService.class;
 
     @Autowired
     private UserService userService;
@@ -42,7 +42,7 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse register(RegisterRequest request) {
-        LoggerUtility.d(DEBUG_TAG, String.format("Execute method: [register] request: [%s]", request));
+        LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", request));
 
         if (request == null) {
             throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);
@@ -83,7 +83,7 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse login(LoginRequest request) {
-        LoggerUtility.d(DEBUG_TAG, String.format("Execute method: [login] request: [%s]", request));
+        LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", request));
 
         if (request == null) {
             throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);
@@ -94,7 +94,7 @@ public class AuthService {
         }
 
         UserEntity user = userService.findByEmail(request.getEmail())
-                                     .orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.INVALID_CREDENTIALS));
+                                     .orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new UnauthorizedException(ApiErrorMessages.INVALID_CREDENTIALS);
