@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: pump-auth-service
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{requestId}] %-5level [%thread] %logger{36} - %msg%n"

@@ -88,8 +88,9 @@ public class JwtUtil {
         }
 
         try {
-            String userId = getClaimsSubject(token);
-            return userRepository.findByEmail(userId)
+            // Email is set as subject
+            String userEmail = getClaimsSubject(token);
+            return userRepository.findByEmail(userEmail)
                                  .orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.USER_NOT_FOUND));
 
         } catch (JwtException | IllegalArgumentException e) {
