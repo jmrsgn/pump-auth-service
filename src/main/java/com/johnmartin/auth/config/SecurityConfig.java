@@ -1,6 +1,5 @@
 package com.johnmartin.auth.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,11 +17,16 @@ import com.johnmartin.auth.security.filter.JwtAuthenticationFilter;
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AuthEntryPoint authEntryPoint;
 
-    @Autowired
-    private AuthEntryPoint authEntryPoint;
+    public SecurityConfig(AuthEntryPoint authEntryPoint) {
+        this.authEntryPoint = authEntryPoint;
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
 
     @Bean
     public CorrelationIdFilter correlationIdFilter() {
@@ -30,20 +34,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   JwtAuthenticationFilter jwtAuthenticationFilter,
+                                                   CorrelationIdFilter correlationIdFilter) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
 
             // This allows Public APIs (login/register), Internal (service-to-service) APIs and Health for status update
             .authorizeHttpRequests(authorize -> authorize.requestMatchers(ApiConstants.Path.API_AUTH + "/**",
-                                                                          ApiConstants.Path.HEALTH)
+                                                                          ApiConstants.Path.HEALTH,
+                                                                          ApiConstants.Path.HEALTH + "/**")
                                                          .permitAll()
                                                          .anyRequest()
                                                          .authenticated())
             .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(correlationIdFilter(), UsernamePasswordAuthenticationFilter.class)
-            .httpBasic(basic -> basic.realmName(ApiConstants.APP_NAME));
-
+            .addFilterBefore(correlationIdFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

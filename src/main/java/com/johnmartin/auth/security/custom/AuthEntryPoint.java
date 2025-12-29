@@ -2,7 +2,6 @@ package com.johnmartin.auth.security.custom;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -21,8 +20,11 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class AuthEntryPoint implements AuthenticationEntryPoint {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+
+    public AuthEntryPoint(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public void commence(HttpServletRequest request,
@@ -31,7 +33,7 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
         // Custom response when not authenticated for uniformity
         ApiErrorResponse error = new ApiErrorResponse(HttpStatus.UNAUTHORIZED.value(),
                                                       ApiConstants.Error.UNAUTHORIZED,
-                                                      ApiErrorMessages.USER_IS_NOT_AUTHENTICATED);
+                                                      ApiErrorMessages.USER_IS_NOT_AUTHENTICATED_OR_INVALID_TOKEN);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(objectMapper.writeValueAsString(Result.failure(error)));

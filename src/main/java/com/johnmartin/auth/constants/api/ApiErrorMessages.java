@@ -16,4 +16,6 @@ public class ApiErrorMessages {
     public static final String YOU_ARE_NOT_ALLOWED_TO_ACCESS_THIS_RESOURCE = "You are not allowed to access this resource";
 
     public static final String INVALID_TOKEN = "Invalid Token";
+    public static final String USER_IS_NOT_AUTHENTICATED_OR_INVALID_TOKEN = USER_IS_NOT_AUTHENTICATED + " or "
+                                                                            + INVALID_TOKEN;
 }
