@@ -38,12 +38,12 @@ public class SecurityConfig {
                                                    JwtAuthenticationFilter jwtAuthenticationFilter,
                                                    CorrelationIdFilter correlationIdFilter) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-
-            // This allows Public APIs (login/register), Internal (service-to-service) APIs and Health for status update
             .authorizeHttpRequests(authorize -> authorize.requestMatchers(ApiConstants.Path.API_AUTH + "/**",
-                                                                          ApiConstants.Path.HEALTH,
-                                                                          ApiConstants.Path.HEALTH + "/**")
+                                                                          ApiConstants.Path.ACTUATOR + ApiConstants.Path.HEALTH,
+                                                                          ApiConstants.Path.ACTUATOR + ApiConstants.Path.HEALTH + "/**")
                                                          .permitAll()
+                                                         .requestMatchers(ApiConstants.Path.ACTUATOR + "/**")
+                                                         .denyAll()
                                                          .anyRequest()
                                                          .authenticated())
             .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))

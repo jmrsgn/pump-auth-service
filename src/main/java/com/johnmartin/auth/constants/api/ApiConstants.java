@@ -5,9 +5,11 @@ public class ApiConstants {
     public static final String APP_NAME = "Pump API";
 
     public static class Path {
+        public static final String ACTUATOR = "/actuator";
+        public static final String HEALTH = "/health";
+
         public static final String API_BASE_V1 = "/api/v1";
         public static final String API_BASE_V1_INTERNAL = "/api/v1/internal";
-        public static final String HEALTH = "/actuator/health";
         public static final String VALIDATE = "/validate";
 
         // Auth
