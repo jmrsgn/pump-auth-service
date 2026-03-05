@@ -65,7 +65,7 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setRole(request.getRole());
-        user.setProfileImageUrl(request.getProfileImageUrl());
+        user.setProfileImage(request.getProfileImageUrl());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         UserEntity createdUser = userService.createUser(user);

@@ -12,6 +12,6 @@ public class UserMapper {
                                 userEntity.getEmail(),
                                 userEntity.getPhone(),
                                 userEntity.getRole(),
-                                userEntity.getProfileImageUrl());
+                                userEntity.getProfileImage());
     }
 }

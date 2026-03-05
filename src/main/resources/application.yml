@@ -2,6 +2,18 @@ spring:
   application:
     name: pump-auth-service
 
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+    username: pump_auth
+    password: password
+    driver-class-name: oracle.jdbc.OracleDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.OracleDialect
+    show-sql: true
+
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%X{requestId}] %-5level [%thread] %logger{36} - %msg%n"
