@@ -59,14 +59,14 @@ public class AuthService {
         }
 
         UserEntity user = new UserEntity();
-        user.setId(UUID.randomUUID().toString());
+        user.setId(UUID.randomUUID());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
-        user.setRole(request.getRole());
+        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setProfileImage(request.getProfileImageUrl());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEnabled(Boolean.TRUE);
 
         UserEntity createdUser = userService.createUser(user);
 
@@ -96,7 +96,7 @@ public class AuthService {
         UserEntity user = userService.findByEmail(request.getEmail())
                                      .orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.USER_NOT_FOUND));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new UnauthorizedException(ApiErrorMessages.INVALID_CREDENTIALS);
         }
 

@@ -1,5 +1,6 @@
 package com.johnmartin.auth.controllers.internal;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,10 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.johnmartin.auth.constants.SecurityConstants;
 import com.johnmartin.auth.constants.api.ApiConstants;
+import com.johnmartin.auth.constants.api.ApiErrorMessages;
 import com.johnmartin.auth.dto.response.UserResponse;
 import com.johnmartin.auth.entities.UserEntity;
+import com.johnmartin.auth.exception.UnauthorizedException;
 import com.johnmartin.auth.mapper.UserMapper;
 import com.johnmartin.auth.security.JwtUtil;
+import com.johnmartin.auth.service.UserService;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
 @RestController
@@ -29,6 +33,9 @@ public class InternalAuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping(ApiConstants.Path.VALIDATE)
     public ResponseEntity<UserResponse> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
                                                       @RequestHeader(value = SecurityConstants.REQUEST_ID, required = false) String requestId) {
@@ -39,10 +46,13 @@ public class InternalAuthController {
 
         MDC.put(SecurityConstants.REQUEST_ID, requestId);
 
+        // Return the email here
         try {
             String token = authorizationHeader.replace("Bearer ", StringUtils.EMPTY);
-            UserEntity user = jwtUtil.validateTokenAndGetUser(token);
-            return ResponseEntity.ok(UserMapper.toResponse(user));
+            String email = jwtUtil.extractEmail(token);
+
+            Optional<UserEntity> user = userService.findByEmail(email);
+            return ResponseEntity.ok(UserMapper.toResponse(user.orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.USER_NOT_FOUND))));
         } finally {
             MDC.remove(SecurityConstants.REQUEST_ID);
         }

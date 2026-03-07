@@ -6,12 +6,11 @@ import com.johnmartin.auth.entities.UserEntity;
 public class UserMapper {
 
     public static UserResponse toResponse(UserEntity userEntity) {
-        return new UserResponse(userEntity.getId(),
-                                userEntity.getFirstName(),
-                                userEntity.getLastName(),
-                                userEntity.getEmail(),
-                                userEntity.getPhone(),
-                                userEntity.getRole(),
-                                userEntity.getProfileImage());
+        return new UserResponse().withId(userEntity.getId().toString())
+                                 .withFirstName(userEntity.getFirstName())
+                                 .withLastName(userEntity.getLastName())
+                                 .withEmail(userEntity.getEmail())
+                                 .withPhone(userEntity.getPhone())
+                                 .withProfileImage(userEntity.getProfileImage());
     }
 }

@@ -1,83 +1,45 @@
 package com.johnmartin.auth.dto.response;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class UserResponse {
     private String id;
     private String firstName;
     private String lastName;
     private String email;
     private String phone;
-    private Integer role;
-    private String profileImageUrl;
+    private String profileImage;
 
-    public UserResponse(String id,
-                        String firstName,
-                        String lastName,
-                        String email,
-                        String phone,
-                        Integer role,
-                        String profileImageUrl) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phone = phone;
-        this.role = role;
-        this.profileImageUrl = profileImageUrl;
+    public UserResponse withId(String id) {
+        setId(id);
+        return this;
     }
 
-    public String getId() {
-        return id;
+    public UserResponse withFirstName(String firstName) {
+        setFirstName(firstName);
+        return this;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public UserResponse withLastName(String lastName) {
+        setLastName(lastName);
+        return this;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public UserResponse withEmail(String email) {
+        setEmail(email);
+        return this;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public UserResponse withPhone(String phone) {
+        setPhone(phone);
+        return this;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Integer getRole() {
-        return role;
-    }
-
-    public void setRole(Integer role) {
-        this.role = role;
-    }
-
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public UserResponse withProfileImage(String profileImage) {
+        setProfileImage(profileImage);
+        return this;
     }
 }

@@ -6,12 +6,14 @@ import com.johnmartin.auth.constants.entities.RoleEntityConstants;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-@Entity(name = RoleEntityConstants.TABLE_NAME)
+@Entity
+@Table(name = RoleEntityConstants.TABLE_NAME)
 public class RoleEntity {
 
     @Id

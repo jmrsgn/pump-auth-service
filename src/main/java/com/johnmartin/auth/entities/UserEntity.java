@@ -4,28 +4,52 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.springframework.data.annotation.Id;
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.johnmartin.auth.constants.entities.UserEntityConstants;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-@Entity(name = UserEntityConstants.TABLE_NAME)
+@Entity
+@Table(name = UserEntityConstants.TABLE_NAME)
 public class UserEntity {
     @Id
     private UUID id;
+
+    @Column(name = UserEntityConstants.COLUMN_FIRST_NAME)
     private String firstName;
+
+    @Column(name = UserEntityConstants.COLUMN_LAST_NAME)
     private String lastName;
+
+    @Column(name = UserEntityConstants.COLUMN_EMAIL)
     private String email;
+
+    @Column(name = UserEntityConstants.COLUMN_PHONE)
     private String phone;
+
+    @Column(name = UserEntityConstants.COLUMN_PASSWORD_HASH)
     private String passwordHash;
+
+    @Column(name = UserEntityConstants.COLUMN_PROFILE_IMAGE)
     private String profileImage;
+
+    @Column(name = UserEntityConstants.COLUMN_ENABLED)
     private Boolean enabled;
+
+    @CreationTimestamp
+    @Column(name = UserEntityConstants.COLUMN_CREATED_AT, updatable = false)
     private Date createdAt;
+
+    @CreationTimestamp
+    @Column(name = UserEntityConstants.COLUMN_UPDATED_AT)
     private Date updatedAt;
 
     @Override

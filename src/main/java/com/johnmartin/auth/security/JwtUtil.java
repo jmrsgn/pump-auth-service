@@ -6,15 +6,10 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.johnmartin.auth.constants.AppStrings;
-import com.johnmartin.auth.constants.api.ApiErrorMessages;
-import com.johnmartin.auth.entities.UserEntity;
-import com.johnmartin.auth.exception.UnauthorizedException;
-import com.johnmartin.auth.repository.UserRepository;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -26,9 +21,6 @@ public class JwtUtil {
 
     private final SecretKey secretKey;
     private final long expirationMillis;
-
-    @Autowired
-    private UserRepository userRepository;
 
     public JwtUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") long expirationMillis) {
 
@@ -81,21 +73,4 @@ public class JwtUtil {
             return false;
         }
     }
-
-    public UserEntity validateTokenAndGetUser(String token) {
-        if (StringUtils.isBlank(token)) {
-            throw new UnauthorizedException(ApiErrorMessages.USER_IS_NOT_AUTHENTICATED);
-        }
-
-        try {
-            // Email is set as subject
-            String userEmail = getClaimsSubject(token);
-            return userRepository.findByEmail(userEmail)
-                                 .orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.USER_NOT_FOUND));
-
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new UnauthorizedException(ApiErrorMessages.INVALID_TOKEN);
-        }
-    }
-
 }
