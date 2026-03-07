@@ -46,7 +46,6 @@ public class InternalAuthController {
 
         MDC.put(SecurityConstants.REQUEST_ID, requestId);
 
-        // Return the email here
         try {
             String token = authorizationHeader.replace("Bearer ", StringUtils.EMPTY);
             String email = jwtUtil.extractEmail(token);
