@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.johnmartin.auth.constants.api.ApiErrorMessages;
+import com.johnmartin.auth.dto.request.CreateSocialUserRequest;
 import com.johnmartin.auth.dto.request.LoginRequest;
 import com.johnmartin.auth.dto.request.RegisterRequest;
 import com.johnmartin.auth.dto.response.AuthResponse;
@@ -65,10 +66,17 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        user.setProfileImage(request.getProfileImageUrl());
         user.setEnabled(Boolean.TRUE);
 
         UserEntity createdUser = userService.createUser(user);
+
+        CreateSocialUserRequest createSocialUserRequest = new CreateSocialUserRequest();
+        createSocialUserRequest.setId(createdUser.getId().toString());
+        createSocialUserRequest.setFirstName(createdUser.getFirstName());
+        createSocialUserRequest.setLastName(createdUser.getLastName());
+        createSocialUserRequest.setEmail(createdUser.getEmail());
+
+        socialService.createUser(authorizationHeader, requestId, request);
 
         AuthResponse response = new AuthResponse();
         response.setUserResponse(UserMapper.toResponse(createdUser));

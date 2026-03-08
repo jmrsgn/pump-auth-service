@@ -1,6 +1,6 @@
 package com.johnmartin.auth.entities;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -38,19 +38,16 @@ public class UserEntity {
     @Column(name = UserEntityConstants.COLUMN_PASSWORD_HASH)
     private String passwordHash;
 
-    @Column(name = UserEntityConstants.COLUMN_PROFILE_IMAGE)
-    private String profileImage;
-
     @Column(name = UserEntityConstants.COLUMN_ENABLED)
     private Boolean enabled;
 
     @CreationTimestamp
     @Column(name = UserEntityConstants.COLUMN_CREATED_AT, updatable = false)
-    private Date createdAt;
+    private Instant createdAt;
 
     @CreationTimestamp
     @Column(name = UserEntityConstants.COLUMN_UPDATED_AT)
-    private Date updatedAt;
+    private Instant updatedAt;
 
     @Override
     public boolean equals(Object o) {
@@ -62,29 +59,19 @@ public class UserEntity {
         return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName)
                && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email)
                && Objects.equals(phone, that.phone) && Objects.equals(passwordHash, that.passwordHash)
-               && Objects.equals(profileImage, that.profileImage) && Objects.equals(enabled, that.enabled)
-               && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+               && Objects.equals(enabled, that.enabled) && Objects.equals(createdAt, that.createdAt)
+               && Objects.equals(updatedAt, that.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id,
-                            firstName,
-                            lastName,
-                            email,
-                            phone,
-                            passwordHash,
-                            profileImage,
-                            enabled,
-                            createdAt,
-                            updatedAt);
+        return Objects.hash(id, firstName, lastName, email, phone, passwordHash, enabled, createdAt, updatedAt);
     }
 
     @Override
     public String toString() {
         return "UserEntity{" + "id='" + id + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName
                + '\'' + ", email='" + email + '\'' + ", phone='" + phone + '\'' + ", passwordHash='" + passwordHash
-               + '\'' + ", profileImage='" + profileImage + '\'' + ", enabled=" + enabled + ", createdAt=" + createdAt
-               + ", updatedAt=" + updatedAt + '}';
+               + '\'' + '\'' + ", enabled=" + enabled + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
     }
 }

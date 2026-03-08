@@ -1,0 +1,30 @@
+package com.johnmartin.auth.dto.request;
+
+import com.johnmartin.auth.constants.api.ApiErrorMessages;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class CreateSocialUserRequest {
+
+    @NotBlank(message = ApiErrorMessages.USER_ID_IS_MISSING_IN_REQUEST)
+    private String id;
+
+    @NotBlank(message = ApiErrorMessages.FIRST_NAME_IS_REQUIRED)
+    private String firstName;
+
+    @NotBlank(message = ApiErrorMessages.LAST_NAME_IS_REQUIRED)
+    private String lastName;
+
+    @NotBlank(message = ApiErrorMessages.EMAIL_IS_REQUIRED)
+    private String email;
+
+    @Override
+    public String toString() {
+        return "CreateUserRequest{" + "id='" + id + '\'' + ", firstName='" + firstName + '\'' + ", lastName='"
+               + lastName + '\'' + ", email='" + email + '\'' + '}';
+    }
+}
