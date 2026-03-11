@@ -23,5 +23,4 @@ public class ApiErrorMessages {
     public static final String USER_ID_IS_MISSING_IN_REQUEST = "User ID is missing in request";
     public static final String FIRST_NAME_IS_REQUIRED = "First name is required";
     public static final String LAST_NAME_IS_REQUIRED = "Last name is required";
-    public static final String EMAIL_IS_REQUIRED = "Email is required";
 }

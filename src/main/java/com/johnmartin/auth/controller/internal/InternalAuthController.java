@@ -1,4 +1,4 @@
-package com.johnmartin.auth.controllers.internal;
+package com.johnmartin.auth.controller.internal;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +25,7 @@ import com.johnmartin.auth.service.UserService;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
 @RestController
-@RequestMapping(ApiConstants.Path.API_AUTH_INTERNAL)
+@RequestMapping(ApiConstants.InternalPath.API_AUTH_INTERNAL)
 public class InternalAuthController {
 
     private final Class<InternalAuthController> clazz = InternalAuthController.class;
@@ -36,7 +36,7 @@ public class InternalAuthController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(ApiConstants.Path.VALIDATE)
+    @PostMapping(ApiConstants.InternalPath.VALIDATE)
     public ResponseEntity<UserResponse> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
                                                       @RequestHeader(value = SecurityConstants.REQUEST_ID, required = false) String requestId) {
         LoggerUtility.d(clazz, "Execute method: [validateToken]");

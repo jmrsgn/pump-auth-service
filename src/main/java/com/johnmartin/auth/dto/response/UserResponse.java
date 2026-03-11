@@ -11,7 +11,6 @@ public class UserResponse {
     private String lastName;
     private String email;
     private String phone;
-    private String profileImage;
 
     public UserResponse withId(String id) {
         setId(id);
@@ -35,11 +34,6 @@ public class UserResponse {
 
     public UserResponse withPhone(String phone) {
         setPhone(phone);
-        return this;
-    }
-
-    public UserResponse withProfileImage(String profileImage) {
-        setProfileImage(profileImage);
         return this;
     }
 }

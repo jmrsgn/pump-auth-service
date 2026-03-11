@@ -1,6 +1,5 @@
-package com.johnmartin.auth.controllers;
+package com.johnmartin.auth.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,18 +13,23 @@ import com.johnmartin.auth.dto.response.AuthResponse;
 import com.johnmartin.auth.dto.response.Result;
 import com.johnmartin.auth.service.AuthService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(ApiConstants.Path.API_AUTH)
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping(ApiConstants.Path.REGISTER)
-    public ResponseEntity<Result<AuthResponse>> register( @Valid @RequestBody RegisterRequest request) {
-        AuthResponse response = authService.register(request);
+    public ResponseEntity<Result<AuthResponse>> register(HttpServletRequest request,
+                                                         @Valid @RequestBody RegisterRequest registerRequest) {
+        AuthResponse response = authService.register(request, registerRequest);
         return ResponseEntity.ok(Result.success(response));
     }
 

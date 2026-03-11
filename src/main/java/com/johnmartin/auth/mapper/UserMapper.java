@@ -10,7 +10,6 @@ public class UserMapper {
                                  .withFirstName(userEntity.getFirstName())
                                  .withLastName(userEntity.getLastName())
                                  .withEmail(userEntity.getEmail())
-                                 .withPhone(userEntity.getPhone())
-                                 .withProfileImage(userEntity.getProfileImage());
+                                 .withPhone(userEntity.getPhone());
     }
 }
