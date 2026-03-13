@@ -7,9 +7,12 @@ import com.johnmartin.auth.constants.SecurityConstants;
 import com.johnmartin.auth.constants.api.ApiConstants;
 import com.johnmartin.auth.constants.api.ApiErrorMessages;
 import com.johnmartin.auth.dto.request.CreateSocialUserRequest;
+import com.johnmartin.auth.utilities.LoggerUtility;
 
 @Service
 public class SocialServiceClient {
+
+    private final Class<SocialServiceClient> clazz = SocialServiceClient.class;
 
     private final RestClient socialWebClient;
 
@@ -18,6 +21,10 @@ public class SocialServiceClient {
     }
 
     public void createUser(String requestId, CreateSocialUserRequest request) {
+        LoggerUtility.d(clazz,
+                        String.format("Execute method: [createUser] requestId: [%s] request: [%s]",
+                                      requestId,
+                                      request));
         try {
             socialWebClient.post()
                            .uri(ApiConstants.PumpSocialService.API_CREATE_USER)
