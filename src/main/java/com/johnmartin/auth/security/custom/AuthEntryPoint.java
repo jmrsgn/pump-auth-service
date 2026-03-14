@@ -30,12 +30,14 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
+
         // Custom response when not authenticated for uniformity
-        ApiErrorResponse error = new ApiErrorResponse(HttpStatus.UNAUTHORIZED.value(),
-                                                      ApiConstants.Error.UNAUTHORIZED,
-                                                      ApiErrorMessages.USER_IS_NOT_AUTHENTICATED_OR_INVALID_TOKEN);
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse().withStatus(HttpStatus.UNAUTHORIZED.value())
+                                                                  .withError(ApiConstants.Error.UNAUTHORIZED)
+                                                                  .withMessage(ApiErrorMessages.User.USER_IS_NOT_AUTHENTICATED_OR_INVALID_TOKEN);
+
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(objectMapper.writeValueAsString(Result.failure(error)));
+        response.getWriter().write(objectMapper.writeValueAsString(Result.failure(apiErrorResponse)));
     }
 }

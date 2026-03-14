@@ -5,16 +5,10 @@ import java.util.Optional;
 /**
  * A generic Result class that represents either a success with data or a failure with an error.
  *
- * @param <T> Type of the success data
+ * @param <T>
+ *            Type of the success data
  */
-public class Result<T> {
-    private final T data;
-    private final ApiErrorResponse apiErrorResponse;
-
-    private Result(T data, ApiErrorResponse apiErrorResponse) {
-        this.data = data;
-        this.apiErrorResponse = apiErrorResponse;
-    }
+public record Result<T>(T data, ApiErrorResponse apiErrorResponse) {
 
     /**
      * Factory method for success

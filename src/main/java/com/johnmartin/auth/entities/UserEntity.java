@@ -1,17 +1,16 @@
 package com.johnmartin.auth.entities;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.johnmartin.auth.constants.entities.UserEntityConstants;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +20,7 @@ import lombok.Setter;
 @Table(name = UserEntityConstants.TABLE_NAME)
 public class UserEntity {
     @Id
+    @Column(name = UserEntityConstants.COLUMN_ID)
     private UUID id;
 
     @Column(name = UserEntityConstants.COLUMN_FIRST_NAME)
@@ -48,6 +48,10 @@ public class UserEntity {
     @CreationTimestamp
     @Column(name = UserEntityConstants.COLUMN_UPDATED_AT)
     private Instant updatedAt;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = UserEntityConstants.Roles.TABLE_NAME, joinColumns = @JoinColumn(name = UserEntityConstants.Roles.COLUMN_USER_ID), inverseJoinColumns = @JoinColumn(name = UserEntityConstants.Roles.COLUMN_ROLE_ID))
+    private Set<RoleEntity> roles = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

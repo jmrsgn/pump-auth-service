@@ -10,16 +10,16 @@ import lombok.Setter;
 @Getter
 public class CreateSocialUserRequest {
 
-    @NotBlank(message = ApiErrorMessages.USER_ID_IS_MISSING_IN_REQUEST)
+    @NotBlank(message = ApiErrorMessages.User.USER_ID_IS_MISSING_IN_REQUEST)
     private String id;
 
-    @NotBlank(message = ApiErrorMessages.FIRST_NAME_IS_REQUIRED)
+    @NotBlank(message = ApiErrorMessages.User.FIRST_NAME_IS_REQUIRED)
     private String firstName;
 
-    @NotBlank(message = ApiErrorMessages.LAST_NAME_IS_REQUIRED)
+    @NotBlank(message = ApiErrorMessages.User.LAST_NAME_IS_REQUIRED)
     private String lastName;
 
-    @NotBlank(message = ApiErrorMessages.EMAIL_IS_REQUIRED)
+    @NotBlank(message = ApiErrorMessages.User.EMAIL_IS_REQUIRED)
     private String email;
 
     @Override

@@ -11,9 +11,11 @@ import com.johnmartin.auth.dto.request.CreateSocialUserRequest;
 import com.johnmartin.auth.dto.request.LoginRequest;
 import com.johnmartin.auth.dto.request.RegisterRequest;
 import com.johnmartin.auth.dto.response.AuthResponse;
+import com.johnmartin.auth.entities.RoleEntity;
 import com.johnmartin.auth.entities.UserEntity;
 import com.johnmartin.auth.exception.BadRequestException;
 import com.johnmartin.auth.exception.ConflictException;
+import com.johnmartin.auth.exception.NotFoundException;
 import com.johnmartin.auth.exception.UnauthorizedException;
 import com.johnmartin.auth.mapper.UserMapper;
 import com.johnmartin.auth.security.JwtUtil;
@@ -25,9 +27,11 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class AuthService {
 
-    private final Class<AuthService> clazz = AuthService.class;
+    private static final String DEBUG_TAG = AuthService.class.getSimpleName();
 
     private final UserService userService;
+
+    private final RoleService roleService;
 
     private final SocialServiceClient socialServiceClient;
 
@@ -36,10 +40,12 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public AuthService(UserService userService,
+                       RoleService roleService,
                        SocialServiceClient socialServiceClient,
                        JwtUtil jwtUtil,
                        PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.roleService = roleService;
         this.socialServiceClient = socialServiceClient;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
@@ -53,21 +59,18 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse register(HttpServletRequest request, RegisterRequest registerRequest) {
-        LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", request));
+        LoggerUtility.d(DEBUG_TAG, String.format("Execute method: [register] request: [%s]", request));
 
         if (request == null) {
             throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);
         }
 
-        // TODO: add validations for other fields
-
-        if (StringUtils.isBlank(registerRequest.getEmail()) || StringUtils.isBlank(registerRequest.getPassword())) {
-            throw new BadRequestException(ApiErrorMessages.EMAIL_AND_PASSWORD_ARE_REQUIRED);
-        }
-
+        // Check for user email duplicates
         if (userService.findByEmail(registerRequest.getEmail()).isPresent()) {
-            throw new ConflictException(ApiErrorMessages.USER_WITH_THIS_EMAIL_ALREADY_EXISTS);
+            throw new ConflictException(ApiErrorMessages.User.USER_WITH_THIS_EMAIL_ALREADY_EXISTS);
         }
+
+        LoggerUtility.d(DEBUG_TAG, "Creating user");
 
         UserEntity user = new UserEntity();
         user.setId(UUID.randomUUID());
@@ -78,7 +81,13 @@ public class AuthService {
         user.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
         user.setEnabled(Boolean.TRUE);
 
+        RoleEntity userRole = roleService.getRole(registerRequest.getRole())
+                                         .orElseThrow(() -> new NotFoundException(ApiErrorMessages.Roles.INVALID_ROLE));
+
+        user.getRoles().add(userRole);
+
         UserEntity createdUser = userService.createUser(user);
+        LoggerUtility.d(DEBUG_TAG, "created user: [%s]");
 
         // Create Social User
         CreateSocialUserRequest createSocialUserRequest = new CreateSocialUserRequest();
@@ -88,8 +97,6 @@ public class AuthService {
         createSocialUserRequest.setEmail(createdUser.getEmail());
 
         String requestId = (String) request.getAttribute(SecurityConstants.REQUEST_ID);
-
-        // TODO: add checking of auth header
         socialServiceClient.createUser(requestId, createSocialUserRequest);
 
         AuthResponse response = new AuthResponse();
@@ -105,21 +112,21 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse login(LoginRequest request) {
-        LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", request));
+        LoggerUtility.d(DEBUG_TAG, String.format("Execute method: [login] request: [%s]", request));
 
         if (request == null) {
             throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);
         }
 
         if (StringUtils.isBlank(request.getEmail()) || StringUtils.isBlank(request.getPassword())) {
-            throw new BadRequestException(ApiErrorMessages.EMAIL_AND_PASSWORD_ARE_REQUIRED);
+            throw new BadRequestException(ApiErrorMessages.User.EMAIL_AND_PASSWORD_ARE_REQUIRED);
         }
 
         UserEntity user = userService.findByEmail(request.getEmail())
-                                     .orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.USER_NOT_FOUND));
+                                     .orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.User.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new UnauthorizedException(ApiErrorMessages.INVALID_CREDENTIALS);
+            throw new UnauthorizedException(ApiErrorMessages.User.INVALID_CREDENTIALS);
         }
 
         String token = jwtUtil.generateToken(user.getEmail());

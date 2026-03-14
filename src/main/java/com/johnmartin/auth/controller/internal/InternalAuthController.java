@@ -28,7 +28,7 @@ import com.johnmartin.auth.utilities.LoggerUtility;
 @RequestMapping(ApiConstants.InternalPath.API_AUTH_INTERNAL)
 public class InternalAuthController {
 
-    private final Class<InternalAuthController> clazz = InternalAuthController.class;
+    private static final String DEBUG_TAG = InternalAuthController.class.getSimpleName();
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -39,7 +39,7 @@ public class InternalAuthController {
     @PostMapping(ApiConstants.InternalPath.VALIDATE)
     public ResponseEntity<UserResponse> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
                                                       @RequestHeader(value = SecurityConstants.REQUEST_ID, required = false) String requestId) {
-        LoggerUtility.d(clazz, "Execute method: [validateToken]");
+        LoggerUtility.d(DEBUG_TAG, "Execute method: [validateToken]");
         if (StringUtils.isBlank(requestId)) {
             requestId = UUID.randomUUID().toString();
         }
@@ -51,7 +51,7 @@ public class InternalAuthController {
             String email = jwtUtil.extractEmail(token);
 
             Optional<UserEntity> user = userService.findByEmail(email);
-            return ResponseEntity.ok(UserMapper.toResponse(user.orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.USER_NOT_FOUND))));
+            return ResponseEntity.ok(UserMapper.toResponse(user.orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.User.USER_NOT_FOUND))));
         } finally {
             MDC.remove(SecurityConstants.REQUEST_ID);
         }

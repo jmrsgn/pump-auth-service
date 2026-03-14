@@ -2,6 +2,11 @@ package com.johnmartin.auth.dto.response;
 
 import java.time.Instant;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ApiErrorResponse {
 
     private int status;
@@ -13,42 +18,18 @@ public class ApiErrorResponse {
         this.timestamp = Instant.now();
     }
 
-    public ApiErrorResponse(int status, String error, String message) {
-        this();
-        this.status = status;
-        this.error = error;
-        this.message = message;
+    public ApiErrorResponse withStatus(int status) {
+        setStatus(status);
+        return this;
     }
 
-    public int getStatus() {
-        return status;
+    public ApiErrorResponse withError(String error) {
+        setError(error);
+        return this;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Instant getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public ApiErrorResponse withMessage(String message) {
+        setMessage(message);
+        return this;
     }
 }

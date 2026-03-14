@@ -4,9 +4,12 @@ import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.johnmartin.auth.constants.api.ApiErrorMessages;
 import com.johnmartin.auth.entities.UserEntity;
+import com.johnmartin.auth.repository.RoleRepository;
 import com.johnmartin.auth.repository.UserRepository;
 
 @Service
@@ -14,7 +17,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
     }
 
@@ -31,7 +34,11 @@ public class UserService {
     }
 
     public UserEntity createUser(UserEntity userEntity) {
-        return userRepository.save(userEntity);
+        try {
+            return userRepository.save(userEntity);
+        } catch (Exception e) {
+            throw new RuntimeException(ApiErrorMessages.User.FAILED_TO_CREATE_USER);
+        }
     }
 
     public Optional<UserEntity> getAuthenticatedUser() {

@@ -21,4 +21,4 @@ spring:
 
 logging:
   level:
-    com.johnmartin.auth: DEBUG
+    com.johnmartin.auth: TRACE
