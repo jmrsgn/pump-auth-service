@@ -1,5 +1,6 @@
 package com.johnmartin.auth.controller;
 
+import com.johnmartin.auth.utilities.LoggerUtility;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

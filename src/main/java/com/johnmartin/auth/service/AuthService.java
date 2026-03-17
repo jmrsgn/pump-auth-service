@@ -118,14 +118,14 @@ public class AuthService {
             throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);
         }
 
-        if (StringUtils.isBlank(request.getEmail()) || StringUtils.isBlank(request.getPassword())) {
+        if (StringUtils.isBlank(request.email()) || StringUtils.isBlank(request.password())) {
             throw new BadRequestException(ApiErrorMessages.User.EMAIL_AND_PASSWORD_ARE_REQUIRED);
         }
 
-        UserEntity user = userService.findByEmail(request.getEmail())
+        UserEntity user = userService.findByEmail(request.email())
                                      .orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.User.USER_NOT_FOUND));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+        if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
             throw new UnauthorizedException(ApiErrorMessages.User.INVALID_CREDENTIALS);
         }
 
