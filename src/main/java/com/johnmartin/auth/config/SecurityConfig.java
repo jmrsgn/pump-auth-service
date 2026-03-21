@@ -11,14 +11,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.johnmartin.auth.constants.api.ApiConstants;
 import com.johnmartin.auth.security.JwtUtil;
-import com.johnmartin.auth.security.custom.AuthEntryPoint;
+import com.johnmartin.auth.security.custom.CustomAuthEntryPoint;
 import com.johnmartin.auth.security.filter.CorrelationIdFilter;
 import com.johnmartin.auth.security.filter.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
-    private final AuthEntryPoint authEntryPoint;
+    private final CustomAuthEntryPoint authEntryPoint;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(JwtUtil jwtUtil) {
@@ -30,7 +30,7 @@ public class SecurityConfig {
         return new CorrelationIdFilter();
     }
 
-    public SecurityConfig(AuthEntryPoint authEntryPoint) {
+    public SecurityConfig(CustomAuthEntryPoint authEntryPoint) {
         this.authEntryPoint = authEntryPoint;
     }
 
@@ -39,6 +39,9 @@ public class SecurityConfig {
                                                    JwtAuthenticationFilter jwtAuthenticationFilter,
                                                    CorrelationIdFilter correlationIdFilter) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+            .addFilterBefore(correlationIdFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
             .authorizeHttpRequests(authorize -> authorize.requestMatchers(ApiConstants.Path.API_AUTH + "/**",
                                                                           ApiConstants.Path.ACTUATOR + ApiConstants.Path.HEALTH,
                                                                           ApiConstants.Path.ACTUATOR + ApiConstants.Path.HEALTH + "/**")
@@ -46,10 +49,7 @@ public class SecurityConfig {
                                                          .requestMatchers(ApiConstants.Path.ACTUATOR + "/**")
                                                          .denyAll()
                                                          .anyRequest()
-                                                         .authenticated())
-            .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
-            .addFilterBefore(correlationIdFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                                                         .authenticated());
         return http.build();
     }
 

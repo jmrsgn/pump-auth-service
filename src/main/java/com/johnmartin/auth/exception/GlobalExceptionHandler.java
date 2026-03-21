@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.johnmartin.auth.utils.ApiErrorUtils;
 
@@ -31,6 +32,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<?> handleConflictException(ConflictException ex) {
         return ApiErrorUtils.createConflictErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(HttpClientErrorException.Forbidden.class)
+    public ResponseEntity<?> handleForbiddenException(ConflictException ex) {
+        return ApiErrorUtils.createForbiddenErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

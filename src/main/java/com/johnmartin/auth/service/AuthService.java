@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class AuthService {
 
-    private static final String DEBUG_TAG = AuthService.class.getSimpleName();
+    private static final Class<AuthService> clazz = AuthService.class;
 
     private final UserService userService;
 
@@ -59,7 +59,7 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse register(HttpServletRequest request, RegisterRequest registerRequest) {
-        LoggerUtility.d(DEBUG_TAG, String.format("Execute method: [register] request: [%s]", request));
+        LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", request));
 
         if (request == null) {
             throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);
@@ -70,7 +70,7 @@ public class AuthService {
             throw new ConflictException(ApiErrorMessages.User.USER_WITH_THIS_EMAIL_ALREADY_EXISTS);
         }
 
-        LoggerUtility.d(DEBUG_TAG, "Creating user");
+        LoggerUtility.d(clazz, "Creating user");
 
         UserEntity user = new UserEntity();
         user.setId(UUID.randomUUID());
@@ -87,7 +87,7 @@ public class AuthService {
         user.getRoles().add(userRole);
 
         UserEntity createdUser = userService.createUser(user);
-        LoggerUtility.d(DEBUG_TAG, "created user: [%s]");
+        LoggerUtility.d(clazz, "created user: [%s]");
 
         // Create Social User
         CreateSocialUserRequest createSocialUserRequest = new CreateSocialUserRequest();
@@ -112,7 +112,7 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse login(LoginRequest request) {
-        LoggerUtility.d(DEBUG_TAG, String.format("Execute method: [login] request: [%s]", request));
+        LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", request));
 
         if (request == null) {
             throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);

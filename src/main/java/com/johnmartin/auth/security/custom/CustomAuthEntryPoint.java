@@ -18,11 +18,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class AuthEntryPoint implements AuthenticationEntryPoint {
+public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
 
     private final ObjectMapper objectMapper;
 
-    public AuthEntryPoint(ObjectMapper objectMapper) {
+    public CustomAuthEntryPoint(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -32,12 +32,11 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
                          AuthenticationException authException) throws IOException {
 
         // Custom response when not authenticated for uniformity
-        ApiErrorResponse apiErrorResponse = new ApiErrorResponse().withStatus(HttpStatus.UNAUTHORIZED.value())
-                                                                  .withError(ApiConstants.Error.UNAUTHORIZED)
-                                                                  .withMessage(ApiErrorMessages.User.USER_IS_NOT_AUTHENTICATED_OR_INVALID_TOKEN);
-
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(objectMapper.writeValueAsString(Result.failure(apiErrorResponse)));
+        response.getWriter()
+                .write(objectMapper.writeValueAsString(Result.failure(new ApiErrorResponse(HttpStatus.UNAUTHORIZED.value(),
+                                                                                           ApiConstants.Error.UNAUTHORIZED,
+                                                                                           ApiErrorMessages.User.USER_IS_NOT_AUTHENTICATED_OR_INVALID_TOKEN))));
     }
 }

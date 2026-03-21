@@ -28,7 +28,7 @@ import com.johnmartin.auth.utilities.LoggerUtility;
 @RequestMapping(ApiConstants.InternalPath.API_AUTH_INTERNAL)
 public class InternalAuthController {
 
-    private static final String DEBUG_TAG = InternalAuthController.class.getSimpleName();
+    private static final Class<InternalAuthController> clazz = InternalAuthController.class;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -39,7 +39,7 @@ public class InternalAuthController {
     @PostMapping(ApiConstants.InternalPath.VALIDATE)
     public ResponseEntity<UserResponse> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
                                                       @RequestHeader(value = SecurityConstants.REQUEST_ID, required = false) String requestId) {
-        LoggerUtility.d(DEBUG_TAG, "Execute method: [validateToken]");
+        LoggerUtility.d(clazz, "Execute method: [validateToken]");
         if (StringUtils.isBlank(requestId)) {
             requestId = UUID.randomUUID().toString();
         }

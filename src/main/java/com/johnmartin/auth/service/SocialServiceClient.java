@@ -12,7 +12,7 @@ import com.johnmartin.auth.utilities.LoggerUtility;
 @Service
 public class SocialServiceClient {
 
-    private static final String DEBUG_TAG = SocialServiceClient.class.getSimpleName();
+    private static final Class<SocialServiceClient> clazz = SocialServiceClient.class;
 
     private final RestClient socialWebClient;
 
@@ -21,7 +21,7 @@ public class SocialServiceClient {
     }
 
     public void createUser(String requestId, CreateSocialUserRequest request) {
-        LoggerUtility.d(DEBUG_TAG,
+        LoggerUtility.d(clazz,
                         String.format("Execute method: [createUser] requestId: [%s] request: [%s]",
                                       requestId,
                                       request));
