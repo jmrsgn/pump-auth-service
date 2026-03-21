@@ -19,6 +19,7 @@ import com.johnmartin.auth.exception.NotFoundException;
 import com.johnmartin.auth.exception.UnauthorizedException;
 import com.johnmartin.auth.mapper.UserMapper;
 import com.johnmartin.auth.security.JwtUtil;
+import com.johnmartin.auth.utilities.LogMaskUtility;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
 import io.micrometer.common.util.StringUtils;
@@ -59,7 +60,7 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse register(HttpServletRequest request, RegisterRequest registerRequest) {
-        LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", request));
+        LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", LogMaskUtility.mask(request)));
 
         if (request == null) {
             throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);
@@ -109,7 +110,7 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse login(LoginRequest request) {
-        LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", request));
+        LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", LogMaskUtility.mask(request)));
 
         if (request == null) {
             throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);
