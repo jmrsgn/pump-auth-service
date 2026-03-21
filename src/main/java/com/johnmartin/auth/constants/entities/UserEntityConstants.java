@@ -1,6 +1,10 @@
 package com.johnmartin.auth.constants.entities;
 
 public class UserEntityConstants {
+
+    private UserEntityConstants() {
+    }
+
     public static final String TABLE_NAME = "USERS";
     public static final String COLUMN_ID = "ID";
     public static final String COLUMN_FIRST_NAME = "FIRST_NAME";

@@ -66,7 +66,7 @@ public class AuthService {
         }
 
         // Check for user email duplicates
-        if (userService.findByEmail(registerRequest.getEmail()).isPresent()) {
+        if (userService.findByEmail(registerRequest.email()).isPresent()) {
             throw new ConflictException(ApiErrorMessages.User.USER_WITH_THIS_EMAIL_ALREADY_EXISTS);
         }
 
@@ -74,14 +74,14 @@ public class AuthService {
 
         UserEntity user = new UserEntity();
         user.setId(UUID.randomUUID());
-        user.setFirstName(registerRequest.getFirstName());
-        user.setLastName(registerRequest.getLastName());
-        user.setEmail(registerRequest.getEmail());
-        user.setPhone(registerRequest.getPhone());
-        user.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setFirstName(registerRequest.firstName());
+        user.setLastName(registerRequest.lastName());
+        user.setEmail(registerRequest.email());
+        user.setPhone(registerRequest.phone());
+        user.setPasswordHash(passwordEncoder.encode(registerRequest.password()));
         user.setEnabled(Boolean.TRUE);
 
-        RoleEntity userRole = roleService.getRole(registerRequest.getRole())
+        RoleEntity userRole = roleService.getRole(registerRequest.role())
                                          .orElseThrow(() -> new NotFoundException(ApiErrorMessages.Roles.INVALID_ROLE));
 
         user.getRoles().add(userRole);
@@ -90,18 +90,15 @@ public class AuthService {
         LoggerUtility.d(clazz, "created user: [%s]");
 
         // Create Social User
-        CreateSocialUserRequest createSocialUserRequest = new CreateSocialUserRequest();
-        createSocialUserRequest.setId(createdUser.getId().toString());
-        createSocialUserRequest.setFirstName(createdUser.getFirstName());
-        createSocialUserRequest.setLastName(createdUser.getLastName());
-        createSocialUserRequest.setEmail(createdUser.getEmail());
+        CreateSocialUserRequest createSocialUserRequest = new CreateSocialUserRequest(createdUser.getId().toString(),
+                                                                                      createdUser.getFirstName(),
+                                                                                      createdUser.getLastName(),
+                                                                                      createdUser.getEmail());
 
         String requestId = (String) request.getAttribute(SecurityConstants.REQUEST_ID);
         socialServiceClient.createUser(requestId, createSocialUserRequest);
-
-        AuthResponse response = new AuthResponse();
-        response.setUserResponse(UserMapper.toResponse(createdUser));
-        return response;
+        LoggerUtility.d(clazz, "Social user created");
+        return new AuthResponse(null, UserMapper.toResponse(createdUser));
     }
 
     /**
@@ -130,10 +127,7 @@ public class AuthService {
         }
 
         String token = jwtUtil.generateToken(user.getEmail());
-
-        AuthResponse response = new AuthResponse();
-        response.setToken(token);
-        response.setUserResponse(UserMapper.toResponse(user));
-        return response;
+        LoggerUtility.d(clazz, "Token created");
+        return new AuthResponse(token, UserMapper.toResponse(user));
     }
 }

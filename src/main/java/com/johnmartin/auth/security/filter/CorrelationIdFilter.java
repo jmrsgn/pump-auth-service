@@ -8,6 +8,7 @@ import org.slf4j.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.johnmartin.auth.constants.SecurityConstants;
+import com.johnmartin.auth.utilities.LoggerUtility;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,6 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 
 public class CorrelationIdFilter extends OncePerRequestFilter {
+
+    private static final Class<CorrelationIdFilter> clazz = CorrelationIdFilter.class;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -27,6 +30,8 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
         if (StringUtils.isBlank(requestId)) {
             requestId = UUID.randomUUID().toString();
         }
+
+        LoggerUtility.d(clazz, String.format("requestId: [%s]", requestId));
 
         MDC.put(SecurityConstants.REQUEST_ID, requestId);
         request.setAttribute(SecurityConstants.REQUEST_ID, requestId);

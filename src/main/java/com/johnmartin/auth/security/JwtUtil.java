@@ -9,7 +9,7 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.johnmartin.auth.constants.AppStrings;
+import com.johnmartin.auth.constants.api.ApiErrorMessages;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -25,7 +25,7 @@ public class JwtUtil {
     public JwtUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") long expirationMillis) {
 
         if (StringUtils.isBlank(secretKey)) {
-            throw new IllegalArgumentException(AppStrings.JWT_SECRET_CANNOT_BE_NULL_OR_EMPTY);
+            throw new IllegalArgumentException(ApiErrorMessages.JWT_SECRET_CANNOT_BE_NULL_OR_EMPTY);
         }
 
         byte[] decodedKey = Base64.getDecoder().decode(secretKey.getBytes(StandardCharsets.UTF_8));
@@ -35,7 +35,7 @@ public class JwtUtil {
 
     public String generateToken(String email) {
         if (StringUtils.isBlank(email)) {
-            throw new IllegalArgumentException(AppStrings.EMAIL_CANNOT_BE_BLANK_WHEN_GENERATING_TOKEN);
+            throw new IllegalArgumentException(ApiErrorMessages.EMAIL_CANNOT_BE_BLANK_WHEN_GENERATING_TOKEN);
         }
 
         Date now = new Date();

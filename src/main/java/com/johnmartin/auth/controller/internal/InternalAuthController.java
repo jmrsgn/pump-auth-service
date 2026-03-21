@@ -44,6 +44,7 @@ public class InternalAuthController {
             requestId = UUID.randomUUID().toString();
         }
 
+        LoggerUtility.d(clazz, String.format("requestId: [%s]", requestId));
         MDC.put(SecurityConstants.REQUEST_ID, requestId);
 
         try {

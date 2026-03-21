@@ -5,11 +5,14 @@ import com.johnmartin.auth.entities.UserEntity;
 
 public class UserMapper {
 
+    private UserMapper() {
+    }
+
     public static UserResponse toResponse(UserEntity userEntity) {
-        return new UserResponse().withId(userEntity.getId().toString())
-                                 .withFirstName(userEntity.getFirstName())
-                                 .withLastName(userEntity.getLastName())
-                                 .withEmail(userEntity.getEmail())
-                                 .withPhone(userEntity.getPhone());
+        return new UserResponse(userEntity.getId().toString(),
+                                userEntity.getFirstName(),
+                                userEntity.getLastName(),
+                                userEntity.getEmail(),
+                                userEntity.getPhone());
     }
 }
