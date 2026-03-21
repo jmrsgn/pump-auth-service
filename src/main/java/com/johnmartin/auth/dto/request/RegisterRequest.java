@@ -1,5 +1,6 @@
 package com.johnmartin.auth.dto.request;
 
+import com.johnmartin.auth.annotations.Sensitive;
 import com.johnmartin.auth.constants.api.ApiErrorMessages;
 
 import jakarta.validation.constraints.Email;
@@ -12,11 +13,5 @@ public record RegisterRequest(String firstName,
                               @NotBlank(message = ApiErrorMessages.User.EMAIL_IS_REQUIRED) @Email(message = ApiErrorMessages.User.EMAIL_MUST_BE_VALID) String email,
                               @Pattern(regexp = "^9\\d{9}$", message = ApiErrorMessages.User.INVALID_PHONE_NUMBER) @Size(min = 10, max = 10) String phone,
                               int role,
-                              @NotBlank(message = ApiErrorMessages.User.PASSWORD_IS_REQUIRED) String password) {
-
-    @Override
-    public String toString() {
-        return "RegisterRequest{" + "firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", email='"
-               + email + '\'' + ", phone='" + phone + '\'' + ", role=" + role + ", password='" + password + '\'' + '}';
-    }
+                              @Sensitive @NotBlank(message = ApiErrorMessages.User.PASSWORD_IS_REQUIRED) String password) {
 }
