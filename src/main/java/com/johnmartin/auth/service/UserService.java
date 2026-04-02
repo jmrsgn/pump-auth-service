@@ -1,6 +1,7 @@
 package com.johnmartin.auth.service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-    public UserEntity findById(String userId) {
+    public UserEntity findById(UUID userId) {
         LoggerUtility.d(clazz, "Execute method: [findById]");
         return userRepository.findById(userId)
                              .orElseThrow(() -> new NotFoundException(ApiErrorMessages.User.USER_NOT_FOUND));

@@ -49,7 +49,7 @@ public class InternalAuthController {
         try {
             String token = authorizationHeader.replace("Bearer ", StringUtils.EMPTY);
             String userId = jwtUtil.extractUserId(token);
-            UserEntity user = userService.findById(userId);
+            UserEntity user = userService.findById(UUID.fromString(userId));
             return ResponseEntity.ok(UserMapper.toResponse(user));
         } finally {
             MDC.remove(SecurityConstants.REQUEST_ID);
