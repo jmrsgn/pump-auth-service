@@ -67,7 +67,7 @@ public class AuthService {
         }
 
         // Check for user email duplicates
-        if (userService.findById(registerRequest.email()).isPresent()) {
+        if (userService.findOptionalByEmail(registerRequest.email()).isPresent()) {
             throw new ConflictException(ApiErrorMessages.User.USER_WITH_THIS_EMAIL_ALREADY_EXISTS);
         }
 
@@ -120,8 +120,7 @@ public class AuthService {
             throw new BadRequestException(ApiErrorMessages.User.EMAIL_AND_PASSWORD_ARE_REQUIRED);
         }
 
-        UserEntity user = userService.findById(request.email())
-                                     .orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.User.USER_NOT_FOUND));
+        UserEntity user = userService.findByEmail(request.email());
 
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
             throw new UnauthorizedException(ApiErrorMessages.User.INVALID_CREDENTIALS);

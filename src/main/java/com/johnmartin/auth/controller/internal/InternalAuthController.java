@@ -1,6 +1,5 @@
 package com.johnmartin.auth.controller.internal;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,10 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.johnmartin.auth.constants.SecurityConstants;
 import com.johnmartin.auth.constants.api.ApiConstants;
-import com.johnmartin.auth.constants.api.ApiErrorMessages;
 import com.johnmartin.auth.dto.response.UserResponse;
 import com.johnmartin.auth.entities.UserEntity;
-import com.johnmartin.auth.exception.UnauthorizedException;
 import com.johnmartin.auth.mapper.UserMapper;
 import com.johnmartin.auth.security.JwtUtil;
 import com.johnmartin.auth.service.UserService;
@@ -52,8 +49,8 @@ public class InternalAuthController {
         try {
             String token = authorizationHeader.replace("Bearer ", StringUtils.EMPTY);
             String userId = jwtUtil.extractUserId(token);
-            Optional<UserEntity> user = userService.findById(userId);
-            return ResponseEntity.ok(UserMapper.toResponse(user.orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.User.USER_NOT_FOUND))));
+            UserEntity user = userService.findById(userId);
+            return ResponseEntity.ok(UserMapper.toResponse(user));
         } finally {
             MDC.remove(SecurityConstants.REQUEST_ID);
         }

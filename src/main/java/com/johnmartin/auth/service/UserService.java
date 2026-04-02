@@ -6,10 +6,14 @@ import org.springframework.stereotype.Service;
 
 import com.johnmartin.auth.constants.api.ApiErrorMessages;
 import com.johnmartin.auth.entities.UserEntity;
+import com.johnmartin.auth.exception.NotFoundException;
 import com.johnmartin.auth.repository.UserRepository;
+import com.johnmartin.auth.utilities.LoggerUtility;
 
 @Service
 public class UserService {
+
+    private static final Class<UserService> clazz = UserService.class;
 
     private final UserRepository userRepository;
 
@@ -21,8 +25,21 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-    public Optional<UserEntity> findById(String userId) {
-        return userRepository.findById(userId);
+    public UserEntity findById(String userId) {
+        LoggerUtility.d(clazz, "Execute method: [findById]");
+        return userRepository.findById(userId)
+                             .orElseThrow(() -> new NotFoundException(ApiErrorMessages.User.USER_NOT_FOUND));
+    }
+
+    public UserEntity findByEmail(String email) {
+        LoggerUtility.d(clazz, "Execute method: [findById]");
+        return userRepository.findByEmail(email)
+                             .orElseThrow(() -> new NotFoundException(ApiErrorMessages.User.USER_NOT_FOUND));
+    }
+
+    public Optional<UserEntity> findOptionalByEmail(String email) {
+        LoggerUtility.d(clazz, "Execute method: [findOptionalByEmail]");
+        return userRepository.findByEmail(email);
     }
 
     public UserEntity createUser(UserEntity userEntity) {
