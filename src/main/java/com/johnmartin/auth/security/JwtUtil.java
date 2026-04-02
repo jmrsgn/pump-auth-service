@@ -33,23 +33,23 @@ public class JwtUtil {
         this.expirationMillis = expirationMillis;
     }
 
-    public String generateToken(String email) {
-        if (StringUtils.isBlank(email)) {
-            throw new IllegalArgumentException(ApiErrorMessages.EMAIL_CANNOT_BE_BLANK_WHEN_GENERATING_TOKEN);
+    public String generateToken(String userId) {
+        if (StringUtils.isBlank(userId)) {
+            throw new IllegalArgumentException(ApiErrorMessages.USER_ID_CANNOT_BE_BLANK_WHEN_GENERATING_TOKEN);
         }
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationMillis);
 
         return Jwts.builder()
-                   .setSubject(email)
+                   .setSubject(userId)
                    .setIssuedAt(now)
                    .setExpiration(expiryDate)
                    .signWith(secretKey)
                    .compact();
     }
 
-    public String extractEmail(String token) {
+    public String extractUserId(String token) {
         if (StringUtils.isBlank(token)) {
             return null;
         }

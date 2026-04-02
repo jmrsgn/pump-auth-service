@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,11 +29,14 @@ public class InternalAuthController {
 
     private static final Class<InternalAuthController> clazz = InternalAuthController.class;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public InternalAuthController(JwtUtil jwtUtil, UserService userService) {
+        this.jwtUtil = jwtUtil;
+        this.userService = userService;
+    }
 
     @PostMapping(ApiConstants.InternalPath.VALIDATE)
     public ResponseEntity<UserResponse> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
@@ -49,9 +51,8 @@ public class InternalAuthController {
 
         try {
             String token = authorizationHeader.replace("Bearer ", StringUtils.EMPTY);
-            String email = jwtUtil.extractEmail(token);
-
-            Optional<UserEntity> user = userService.findByEmail(email);
+            String userId = jwtUtil.extractUserId(token);
+            Optional<UserEntity> user = userService.findById(userId);
             return ResponseEntity.ok(UserMapper.toResponse(user.orElseThrow(() -> new UnauthorizedException(ApiErrorMessages.User.USER_NOT_FOUND))));
         } finally {
             MDC.remove(SecurityConstants.REQUEST_ID);

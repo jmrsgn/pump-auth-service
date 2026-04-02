@@ -2,12 +2,10 @@ package com.johnmartin.auth.service;
 
 import java.util.Optional;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.johnmartin.auth.constants.api.ApiErrorMessages;
 import com.johnmartin.auth.entities.UserEntity;
-import com.johnmartin.auth.repository.RoleRepository;
 import com.johnmartin.auth.repository.UserRepository;
 
 @Service
@@ -15,7 +13,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -23,8 +21,8 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-    public Optional<UserEntity> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public Optional<UserEntity> findById(String userId) {
+        return userRepository.findById(userId);
     }
 
     public UserEntity createUser(UserEntity userEntity) {
