@@ -16,6 +16,7 @@ public class ApiConstants {
         public static final String API_AUTH = API_BASE_V1 + "/auth";
         public static final String LOGIN = "/login";
         public static final String REGISTER = "/register";
+        public static final String VERIFY = "/verify";
     }
 
     public static class InternalPath {

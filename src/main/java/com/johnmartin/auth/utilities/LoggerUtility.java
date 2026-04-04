@@ -8,6 +8,7 @@ public final class LoggerUtility {
     private LoggerUtility() {
     }
 
+    // TODO: check
     public static Logger getLogger(Class<?> clazz) {
         return LoggerFactory.getLogger(clazz);
     }

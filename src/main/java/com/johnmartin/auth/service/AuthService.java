@@ -2,17 +2,21 @@ package com.johnmartin.auth.service;
 
 import java.util.UUID;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.johnmartin.auth.constants.SecurityConstants;
-import com.johnmartin.auth.constants.api.ApiErrorMessages;
+import com.johnmartin.auth.constants.api.messages.ApiMessages;
+import com.johnmartin.auth.constants.api.messages.RoleMessages;
+import com.johnmartin.auth.constants.api.messages.UserMessages;
 import com.johnmartin.auth.dto.request.CreateSocialUserRequest;
 import com.johnmartin.auth.dto.request.LoginRequest;
 import com.johnmartin.auth.dto.request.RegisterRequest;
 import com.johnmartin.auth.dto.response.AuthResponse;
-import com.johnmartin.auth.entities.RoleEntity;
-import com.johnmartin.auth.entities.UserEntity;
+import com.johnmartin.auth.entity.RoleEntity;
+import com.johnmartin.auth.entity.UserEntity;
+import com.johnmartin.auth.events.UserRegisteredEvent;
 import com.johnmartin.auth.exception.BadRequestException;
 import com.johnmartin.auth.exception.ConflictException;
 import com.johnmartin.auth.exception.NotFoundException;
@@ -39,17 +43,20 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public AuthService(UserService userService,
                        RoleService roleService,
                        SocialServiceClient socialServiceClient,
                        JwtUtil jwtUtil,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       ApplicationEventPublisher applicationEventPublisher) {
         this.userService = userService;
         this.roleService = roleService;
         this.socialServiceClient = socialServiceClient;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     /**
@@ -63,12 +70,12 @@ public class AuthService {
         LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", LogMaskUtility.mask(request)));
 
         if (request == null) {
-            throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);
+            throw new BadRequestException(ApiMessages.INVALID_REQUEST);
         }
 
         // Check for user email duplicates
         if (userService.findOptionalByEmail(registerRequest.email()).isPresent()) {
-            throw new ConflictException(ApiErrorMessages.User.USER_WITH_THIS_EMAIL_ALREADY_EXISTS);
+            throw new ConflictException(UserMessages.USER_WITH_THIS_EMAIL_ALREADY_EXISTS);
         }
 
         LoggerUtility.d(clazz, "Creating user");
@@ -80,15 +87,19 @@ public class AuthService {
         user.setEmail(registerRequest.email());
         user.setPhone(registerRequest.phone());
         user.setPasswordHash(passwordEncoder.encode(registerRequest.password()));
-        user.setEnabled(Boolean.TRUE);
+        user.setEnabled(Boolean.FALSE); // Users must activate first the account
 
         RoleEntity userRole = roleService.getRole(registerRequest.role())
-                                         .orElseThrow(() -> new NotFoundException(ApiErrorMessages.Roles.INVALID_ROLE));
+                                         .orElseThrow(() -> new NotFoundException(RoleMessages.INVALID_ROLE));
 
         user.getRoles().add(userRole);
 
+        // Save user to DB
         UserEntity createdUser = userService.createUser(user);
         LoggerUtility.d(clazz, "created user: [%s]");
+
+        // Send user email verification
+        applicationEventPublisher.publishEvent(new UserRegisteredEvent(createdUser.getId(), createdUser.getEmail()));
 
         // Create Social User
         CreateSocialUserRequest createSocialUserRequest = new CreateSocialUserRequest(createdUser.getId().toString(),
@@ -113,17 +124,17 @@ public class AuthService {
         LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", LogMaskUtility.mask(request)));
 
         if (request == null) {
-            throw new BadRequestException(ApiErrorMessages.INVALID_REQUEST);
+            throw new BadRequestException(ApiMessages.INVALID_REQUEST);
         }
 
         if (StringUtils.isBlank(request.email()) || StringUtils.isBlank(request.password())) {
-            throw new BadRequestException(ApiErrorMessages.User.EMAIL_AND_PASSWORD_ARE_REQUIRED);
+            throw new BadRequestException(UserMessages.EMAIL_AND_PASSWORD_ARE_REQUIRED);
         }
 
         UserEntity user = userService.findByEmail(request.email());
 
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
-            throw new UnauthorizedException(ApiErrorMessages.User.INVALID_CREDENTIALS);
+            throw new UnauthorizedException(UserMessages.INVALID_CREDENTIALS);
         }
 
         String token = jwtUtil.generateToken(user.getId().toString());

@@ -1,7 +1,7 @@
 package com.johnmartin.auth.mapper;
 
 import com.johnmartin.auth.dto.response.UserResponse;
-import com.johnmartin.auth.entities.UserEntity;
+import com.johnmartin.auth.entity.UserEntity;
 
 public class UserMapper {
 

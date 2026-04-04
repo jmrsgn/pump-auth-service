@@ -1,4 +1,4 @@
-package com.johnmartin.auth.entities;
+package com.johnmartin.auth.entity;
 
 import java.math.BigInteger;
 

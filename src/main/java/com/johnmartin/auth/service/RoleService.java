@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.johnmartin.auth.entities.RoleEntity;
+import com.johnmartin.auth.entity.RoleEntity;
 import com.johnmartin.auth.repository.RoleRepository;
 
 @Service

@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.johnmartin.auth.constants.api.ApiErrorMessages;
-import com.johnmartin.auth.entities.UserEntity;
+import com.johnmartin.auth.constants.api.messages.UserMessages;
+import com.johnmartin.auth.entity.UserEntity;
 import com.johnmartin.auth.exception.NotFoundException;
 import com.johnmartin.auth.repository.UserRepository;
 import com.johnmartin.auth.utilities.LoggerUtility;
@@ -28,14 +28,12 @@ public class UserService {
 
     public UserEntity findById(UUID userId) {
         LoggerUtility.d(clazz, "Execute method: [findById]");
-        return userRepository.findById(userId)
-                             .orElseThrow(() -> new NotFoundException(ApiErrorMessages.User.USER_NOT_FOUND));
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(UserMessages.USER_NOT_FOUND));
     }
 
     public UserEntity findByEmail(String email) {
         LoggerUtility.d(clazz, "Execute method: [findById]");
-        return userRepository.findByEmail(email)
-                             .orElseThrow(() -> new NotFoundException(ApiErrorMessages.User.USER_NOT_FOUND));
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(UserMessages.USER_NOT_FOUND));
     }
 
     public Optional<UserEntity> findOptionalByEmail(String email) {
@@ -47,7 +45,7 @@ public class UserService {
         try {
             return userRepository.save(userEntity);
         } catch (Exception e) {
-            throw new RuntimeException(ApiErrorMessages.User.FAILED_TO_CREATE_USER);
+            throw new RuntimeException(UserMessages.FAILED_TO_CREATE_USER);
         }
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.web.client.RestClient;
 
 import com.johnmartin.auth.constants.SecurityConstants;
 import com.johnmartin.auth.constants.api.ApiConstants;
-import com.johnmartin.auth.constants.api.ApiErrorMessages;
+import com.johnmartin.auth.constants.api.messages.UserMessages;
 import com.johnmartin.auth.dto.request.CreateSocialUserRequest;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
@@ -33,7 +33,7 @@ public class SocialServiceClient {
                            .retrieve()
                            .toBodilessEntity();
         } catch (Exception ex) {
-            throw new RuntimeException(ApiErrorMessages.User.FAILED_TO_CREATE_SOCIAL_USER, ex);
+            throw new RuntimeException(UserMessages.FAILED_TO_CREATE_SOCIAL_USER, ex);
         }
     }
 }

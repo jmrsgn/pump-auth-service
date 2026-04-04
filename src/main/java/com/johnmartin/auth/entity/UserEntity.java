@@ -1,4 +1,4 @@
-package com.johnmartin.auth.entities;
+package com.johnmartin.auth.entity;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ import lombok.Setter;
 @Table(name = UserEntityConstants.TABLE_NAME)
 public class UserEntity {
     @Id
-    @Column(name = UserEntityConstants.COLUMN_ID)
+    @Column(nullable = false, updatable = false, name = UserEntityConstants.COLUMN_ID)
     private UUID id;
 
     @Column(name = UserEntityConstants.COLUMN_FIRST_NAME)
