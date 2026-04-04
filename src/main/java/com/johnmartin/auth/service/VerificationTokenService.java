@@ -5,8 +5,6 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.johnmartin.auth.constants.api.messages.ApiMessages;
-import com.johnmartin.auth.constants.api.messages.UserMessages;
 import com.johnmartin.auth.entity.UserEntity;
 import com.johnmartin.auth.entity.VerificationTokenEntity;
 import com.johnmartin.auth.enums.VerificationStatus;
@@ -31,7 +29,7 @@ public class VerificationTokenService {
     public String generateToken(UUID userId) {
         LoggerUtility.d(clazz, "Execute method: [generateToken]");
         if (userId == null) {
-            throw new IllegalArgumentException(UserMessages.USER_ID_IS_REQUIRED);
+            throw new IllegalArgumentException("User ID is required");
         }
 
         // Delete old tokens (cleanup)
@@ -51,10 +49,10 @@ public class VerificationTokenService {
         LoggerUtility.d(clazz, "Execute method: [verifyToken]");
 
         VerificationTokenEntity verificationToken = verificationTokenRepository.findByToken(token)
-                                                                               .orElseThrow(() -> new NotFoundException(ApiMessages.INVALID_TOKEN));
+                                                                               .orElseThrow(() -> new NotFoundException("Invalid token"));
 
         if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new BadRequestException(ApiMessages.TOKEN_IS_EXPIRED);
+            throw new BadRequestException("Token is expired");
         }
 
         UserEntity user = userService.findById(verificationToken.getUserId());

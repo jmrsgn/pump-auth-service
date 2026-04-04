@@ -4,7 +4,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.johnmartin.auth.constants.api.messages.ApiMessages;
+import com.johnmartin.auth.constants.api.ApiConstants;
 import com.johnmartin.auth.events.UserRegisteredEvent;
 import com.johnmartin.auth.service.EmailService;
 import com.johnmartin.auth.service.VerificationTokenService;
@@ -28,11 +28,11 @@ public class UserRegistrationListener {
         // This method is automatically called by Spring using the event publisher
         LoggerUtility.d(clazz, "Execute method: [handleUserRegistered]");
         if (event == null || event.userId() == null || event.email() == null) {
-            throw new IllegalArgumentException(ApiMessages.INVALID_EVENT_DATA);
+            throw new IllegalArgumentException("Invalid event data");
         }
 
         String token = verificationTokenService.generateToken(event.userId());
-        String link = "http://localhost:8080/api/auth/verify?token=" + token;
+        String link = ApiConstants.BASE_URL + ApiConstants.Path.API_AUTH + ApiConstants.Path.VERIFY + "?token=" + token;
         emailService.sendVerificationEmail(event.email(), link);
     }
 }

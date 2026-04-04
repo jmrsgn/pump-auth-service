@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.johnmartin.auth.constants.api.messages.UserMessages;
 import com.johnmartin.auth.entity.UserEntity;
 import com.johnmartin.auth.exception.NotFoundException;
 import com.johnmartin.auth.repository.UserRepository;
@@ -28,12 +27,12 @@ public class UserService {
 
     public UserEntity findById(UUID userId) {
         LoggerUtility.d(clazz, "Execute method: [findById]");
-        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(UserMessages.USER_NOT_FOUND));
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public UserEntity findByEmail(String email) {
         LoggerUtility.d(clazz, "Execute method: [findById]");
-        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(UserMessages.USER_NOT_FOUND));
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public Optional<UserEntity> findOptionalByEmail(String email) {
@@ -45,7 +44,7 @@ public class UserService {
         try {
             return userRepository.save(userEntity);
         } catch (Exception e) {
-            throw new RuntimeException(UserMessages.FAILED_TO_CREATE_USER);
+            throw new RuntimeException("Failed to create user");
         }
     }
 }

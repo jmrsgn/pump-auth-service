@@ -44,7 +44,10 @@ public class SecurityConfig {
             .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
             .authorizeHttpRequests(authorize -> authorize.requestMatchers(ApiConstants.Path.API_AUTH + "/**",
                                                                           ApiConstants.Path.ACTUATOR + ApiConstants.Path.HEALTH,
-                                                                          ApiConstants.Path.ACTUATOR + ApiConstants.Path.HEALTH + "/**")
+                                                                          ApiConstants.Path.ACTUATOR + ApiConstants.Path.HEALTH + "/**",
+                                                                          "/css/**",
+                                                                          "/js/**",
+                                                                          "/images/**")
                                                          .permitAll()
                                                          .requestMatchers(ApiConstants.Path.ACTUATOR + "/**")
                                                          .denyAll()

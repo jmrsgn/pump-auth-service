@@ -1,0 +1,63 @@
+/* Reset */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #4CAF50, #2e7d32);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+/* Card */
+.card {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Icon */
+.icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.icon.success {
+    color: #4CAF50;
+}
+
+.icon.error {
+    color: #f44336;
+}
+
+.icon.info {
+    color: #2196F3;
+}
+
+/* Title */
+h2 {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Message */
+.message {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Note */
+.note {
+    font-size: 13px;
+    color: #777;
+}

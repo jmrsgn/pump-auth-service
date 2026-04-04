@@ -5,6 +5,7 @@ public class ApiConstants {
     private ApiConstants() {
     }
 
+    public static final String BASE_URL = "http://localhost:8081";
     public static final String API_BASE_V1 = "/api/v1";
     public static final String API_BASE_V1_INTERNAL = "/api/v1/internal";
 

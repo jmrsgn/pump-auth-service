@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import com.johnmartin.auth.constants.api.messages.ApiMessages;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
 import jakarta.mail.internet.MimeMessage;
@@ -29,11 +28,11 @@ public class EmailService {
     public void sendVerificationEmail(String to, String link) {
         LoggerUtility.d(clazz, "Execute method: [sendVerificationEmail]");
         if (to == null || StringUtils.isBlank(to)) {
-            throw new IllegalArgumentException(ApiMessages.EMAIL_IS_REQUIRED);
+            throw new IllegalArgumentException("Email is required");
         }
 
         if (link == null || link.isBlank()) {
-            throw new IllegalArgumentException(ApiMessages.VERIFICATION_LINK_IS_REQUIRED);
+            throw new IllegalArgumentException("Verification link is required");
         }
 
         try {
@@ -50,7 +49,7 @@ public class EmailService {
 
             javaMailSender.send(message);
         } catch (Exception ex) {
-            throw new RuntimeException(ApiMessages.FAILED_TO_SEND_EMAIL, ex);
+            throw new RuntimeException("Failed to send email", ex);
         }
     }
 }

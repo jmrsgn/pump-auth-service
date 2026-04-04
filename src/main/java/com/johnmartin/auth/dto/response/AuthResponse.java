@@ -1,4 +1,4 @@
 package com.johnmartin.auth.dto.response;
 
-public record AuthResponse(String token, UserResponse userResponse) {
+public record AuthResponse(String accessToken, UserResponse userResponse, Long expiresIn) {
 }

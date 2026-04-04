@@ -5,22 +5,19 @@ import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.johnmartin.auth.constants.SecurityConstants;
-import com.johnmartin.auth.constants.api.messages.ApiMessages;
-import com.johnmartin.auth.constants.api.messages.RoleMessages;
-import com.johnmartin.auth.constants.api.messages.UserMessages;
+import com.johnmartin.auth.constants.view.ViewAttributes;
 import com.johnmartin.auth.dto.request.CreateSocialUserRequest;
 import com.johnmartin.auth.dto.request.LoginRequest;
 import com.johnmartin.auth.dto.request.RegisterRequest;
 import com.johnmartin.auth.dto.response.AuthResponse;
 import com.johnmartin.auth.entity.RoleEntity;
 import com.johnmartin.auth.entity.UserEntity;
+import com.johnmartin.auth.enums.VerificationStatus;
 import com.johnmartin.auth.events.UserRegisteredEvent;
-import com.johnmartin.auth.exception.BadRequestException;
-import com.johnmartin.auth.exception.ConflictException;
-import com.johnmartin.auth.exception.NotFoundException;
-import com.johnmartin.auth.exception.UnauthorizedException;
+import com.johnmartin.auth.exception.*;
 import com.johnmartin.auth.mapper.UserMapper;
 import com.johnmartin.auth.security.JwtUtil;
 import com.johnmartin.auth.utilities.LogMaskUtility;
@@ -70,12 +67,12 @@ public class AuthService {
         LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", LogMaskUtility.mask(request)));
 
         if (request == null) {
-            throw new BadRequestException(ApiMessages.INVALID_REQUEST);
+            throw new BadRequestException("Invalid request");
         }
 
         // Check for user email duplicates
         if (userService.findOptionalByEmail(registerRequest.email()).isPresent()) {
-            throw new ConflictException(UserMessages.USER_WITH_THIS_EMAIL_ALREADY_EXISTS);
+            throw new ConflictException("User with this email already exists");
         }
 
         LoggerUtility.d(clazz, "Creating user");
@@ -90,7 +87,7 @@ public class AuthService {
         user.setEnabled(Boolean.FALSE); // Users must activate first the account
 
         RoleEntity userRole = roleService.getRole(registerRequest.role())
-                                         .orElseThrow(() -> new NotFoundException(RoleMessages.INVALID_ROLE));
+                                         .orElseThrow(() -> new NotFoundException("Invalid role"));
 
         user.getRoles().add(userRole);
 
@@ -110,7 +107,7 @@ public class AuthService {
         String requestId = (String) request.getAttribute(SecurityConstants.REQUEST_ID);
         socialServiceClient.createUser(requestId, createSocialUserRequest);
         LoggerUtility.d(clazz, "Social user created");
-        return new AuthResponse(null, UserMapper.toResponse(createdUser));
+        return new AuthResponse(null, UserMapper.toResponse(createdUser), null);
     }
 
     /**
@@ -124,21 +121,44 @@ public class AuthService {
         LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", LogMaskUtility.mask(request)));
 
         if (request == null) {
-            throw new BadRequestException(ApiMessages.INVALID_REQUEST);
+            throw new BadRequestException("Invalid request");
         }
 
         if (StringUtils.isBlank(request.email()) || StringUtils.isBlank(request.password())) {
-            throw new BadRequestException(UserMessages.EMAIL_AND_PASSWORD_ARE_REQUIRED);
+            throw new BadRequestException("Email and password are required");
         }
 
         UserEntity user = userService.findByEmail(request.email());
 
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
-            throw new UnauthorizedException(UserMessages.INVALID_CREDENTIALS);
+            throw new UnauthorizedException("Invalid credentials");
+        }
+
+        if (Boolean.FALSE.equals(user.getEnabled())) {
+            throw new ForbiddenException("User account is not yet activated");
         }
 
         String token = jwtUtil.generateToken(user.getId().toString());
         LoggerUtility.d(clazz, "Token created");
-        return new AuthResponse(token, UserMapper.toResponse(user));
+        return new AuthResponse(token, UserMapper.toResponse(user), jwtUtil.getExpirationSeconds());
+    }
+
+    /**
+     * Set model data
+     * 
+     * @param model
+     *            - Thymeleaf model container data for HTML
+     * @param status
+     *            - Verification status
+     */
+    public void setModelData(Model model, VerificationStatus status) {
+        LoggerUtility.d(clazz, "Execute method: [setModelData]");
+        if (status == VerificationStatus.ALREADY_VERIFIED) {
+            model.addAttribute(ViewAttributes.TITLE, "Already Verified");
+            model.addAttribute(ViewAttributes.MESSAGE, "Your account is already verified.");
+        } else {
+            model.addAttribute(ViewAttributes.TITLE, "Success!");
+            model.addAttribute(ViewAttributes.MESSAGE, "Your account has been successfully verified.");
+        }
     }
 }

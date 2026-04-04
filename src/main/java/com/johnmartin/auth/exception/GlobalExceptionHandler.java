@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
 
 import com.johnmartin.auth.dto.response.ApiErrorResponse;
 import com.johnmartin.auth.dto.response.Result;
@@ -22,48 +21,45 @@ public class GlobalExceptionHandler {
     /**
      * Global exception handlers
      *
-     * errorMessage - message that is displayed for users
-     * 
+     * ex.getMessage() - message that is displayed for users
+     *
      * ex - thrown exception
      */
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Result<ApiErrorResponse>> handleBadRequestException(String errorMessage,
-                                                                              BadRequestException ex) {
+    public ResponseEntity<Result<ApiErrorResponse>> handleBadRequestException(BadRequestException ex) {
         LoggerUtility.e(clazz, ex.getMessage(), ex);
-        return ApiResponseUtils.createBadRequestErrorResponse(errorMessage);
+        return ApiResponseUtils.createBadRequestErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<Result<ApiErrorResponse>> handleUnauthorizedException(String errorMessage,
-                                                                                UnauthorizedException ex) {
+    public ResponseEntity<Result<ApiErrorResponse>> handleUnauthorizedException(UnauthorizedException ex) {
         LoggerUtility.e(clazz, ex.getMessage(), ex);
-        return ApiResponseUtils.createUnauthorizedErrorResponse(errorMessage);
+        return ApiResponseUtils.createUnauthorizedErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Result<ApiErrorResponse>> handleNotFoundException(String errorMessage, NotFoundException ex) {
+    public ResponseEntity<Result<ApiErrorResponse>> handleNotFoundException(NotFoundException ex) {
         LoggerUtility.e(clazz, ex.getMessage(), ex);
-        return ApiResponseUtils.createNotFoundErrorResponse(errorMessage);
+        return ApiResponseUtils.createNotFoundErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<Result<ApiErrorResponse>> handleConflictException(String errorMessage, ConflictException ex) {
+    public ResponseEntity<Result<ApiErrorResponse>> handleConflictException(ConflictException ex) {
         LoggerUtility.e(clazz, ex.getMessage(), ex);
-        return ApiResponseUtils.createConflictErrorResponse(errorMessage);
+        return ApiResponseUtils.createConflictErrorResponse(ex.getMessage());
     }
 
-    @ExceptionHandler(HttpClientErrorException.Forbidden.class)
-    public ResponseEntity<Result<ApiErrorResponse>> handleForbiddenException(String errorMessage,
-                                                                             ConflictException ex) {
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Result<ApiErrorResponse>> handleForbiddenException(ForbiddenException ex) {
         LoggerUtility.e(clazz, ex.getMessage(), ex);
-        return ApiResponseUtils.createForbiddenErrorResponse(errorMessage);
+        return ApiResponseUtils.createForbiddenErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Result<ApiErrorResponse>> handleException(String errorMessage, Exception ex) {
+    public ResponseEntity<Result<ApiErrorResponse>> handleException(Exception ex) {
         LoggerUtility.e(clazz, ex.getMessage(), ex);
-        return ApiResponseUtils.createInternalServerErrorResponse(errorMessage);
+        return ApiResponseUtils.createInternalServerErrorResponse(ex.getMessage());
     }
 
     /**
@@ -74,7 +70,7 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Result<ApiErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         // Get the first error message will be thrown in Bean annotations for requests
         String message = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
         return ApiResponseUtils.createBadRequestErrorResponse(message);
@@ -88,7 +84,7 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException ex) {
+    public ResponseEntity<Result<ApiErrorResponse>> handleConstraintViolationException(ConstraintViolationException ex) {
         String message = ex.getConstraintViolations().iterator().next().getMessage();
         return ApiResponseUtils.createBadRequestErrorResponse(message);
     }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.johnmartin.auth.constants.api.ApiConstants;
-import com.johnmartin.auth.constants.api.messages.UserMessages;
 import com.johnmartin.auth.dto.response.ApiErrorResponse;
 import com.johnmartin.auth.dto.response.Result;
 
@@ -37,6 +36,6 @@ public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
         response.getWriter()
                 .write(objectMapper.writeValueAsString(Result.failure(new ApiErrorResponse(HttpStatus.UNAUTHORIZED.value(),
                                                                                            ApiConstants.Error.UNAUTHORIZED,
-                                                                                           UserMessages.USER_IS_NOT_AUTHENTICATED_OR_INVALID_TOKEN))));
+                                                                                           "User is not authenticated or invalid token"))));
     }
 }

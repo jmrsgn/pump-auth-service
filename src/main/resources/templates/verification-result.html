@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Verification</title>
+    <link rel="stylesheet" th:href="@{/css/verification.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="icon success" th:if="${title == 'Success!'}">✔</div>
+            <div class="icon error" th:if="${title == 'Error'}">✖</div>
+            <div class="icon info" th:if="${title != 'Success!' and title != 'Error'}">ℹ</div>
+
+            <h2 th:text="${title}">Verification</h2>
+
+            <!-- Message -->
+            <p class="message" th:text="${message}">
+                Your account has been successfully verified.
+            </p>
+
+            <p class="note">
+                You may now close this page and login via the Pump mobile app.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
