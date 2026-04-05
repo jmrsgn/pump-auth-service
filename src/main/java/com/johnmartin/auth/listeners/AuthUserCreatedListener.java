@@ -5,26 +5,26 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.johnmartin.auth.constants.api.ApiConstants;
-import com.johnmartin.auth.events.UserRegisteredEvent;
+import com.johnmartin.auth.events.AuthUserCreatedEvent;
 import com.johnmartin.auth.service.EmailService;
 import com.johnmartin.auth.service.VerificationTokenService;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
 @Component
-public class UserRegistrationListener {
+public class AuthUserCreatedListener {
 
-    private static final Class<UserRegistrationListener> clazz = UserRegistrationListener.class;
+    private static final Class<AuthUserCreatedListener> clazz = AuthUserCreatedListener.class;
     private final VerificationTokenService verificationTokenService;
     private final EmailService emailService;
 
-    public UserRegistrationListener(VerificationTokenService verificationTokenService, EmailService emailService) {
+    public AuthUserCreatedListener(VerificationTokenService verificationTokenService, EmailService emailService) {
         this.verificationTokenService = verificationTokenService;
         this.emailService = emailService;
     }
 
     @Async
     @EventListener
-    public void handleUserRegistered(UserRegisteredEvent event) {
+    public void handleUserRegistered(AuthUserCreatedEvent event) {
         // This method is automatically called by Spring using the event publisher
         LoggerUtility.d(clazz, "Execute method: [handleUserRegistered]");
         if (event == null || event.userId() == null || event.email() == null) {

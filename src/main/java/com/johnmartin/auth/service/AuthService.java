@@ -16,10 +16,11 @@ import com.johnmartin.auth.dto.response.AuthResponse;
 import com.johnmartin.auth.entity.RoleEntity;
 import com.johnmartin.auth.entity.UserEntity;
 import com.johnmartin.auth.enums.VerificationStatus;
-import com.johnmartin.auth.events.UserRegisteredEvent;
+import com.johnmartin.auth.events.AuthUserCreatedEvent;
 import com.johnmartin.auth.exception.*;
 import com.johnmartin.auth.mapper.UserMapper;
 import com.johnmartin.auth.security.JwtUtil;
+import com.johnmartin.auth.service.client.SocialServiceClient;
 import com.johnmartin.auth.utilities.LogMaskUtility;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
@@ -96,7 +97,7 @@ public class AuthService {
         LoggerUtility.d(clazz, "created user: [%s]");
 
         // Send user email verification
-        applicationEventPublisher.publishEvent(new UserRegisteredEvent(createdUser.getId(), createdUser.getEmail()));
+        applicationEventPublisher.publishEvent(new AuthUserCreatedEvent(createdUser.getId(), createdUser.getEmail()));
 
         // Create Social User
         CreateSocialUserRequest createSocialUserRequest = new CreateSocialUserRequest(createdUser.getId().toString(),
@@ -105,8 +106,15 @@ public class AuthService {
                                                                                       createdUser.getEmail());
 
         String requestId = (String) request.getAttribute(SecurityConstants.REQUEST_ID);
-        socialServiceClient.createUser(requestId, createSocialUserRequest);
-        LoggerUtility.d(clazz, "Social user created");
+
+        try {
+            socialServiceClient.createUser(requestId, createSocialUserRequest);
+            LoggerUtility.d(clazz, "Social user created");
+        } catch (Exception e) {
+            // When creating of social user fails, delete auth user
+            userService.deleteById(createdUser.getId());
+        }
+
         return new AuthResponse(null, UserMapper.toResponse(createdUser), null);
     }
 

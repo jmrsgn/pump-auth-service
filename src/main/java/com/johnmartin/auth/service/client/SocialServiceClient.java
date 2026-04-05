@@ -1,4 +1,4 @@
-package com.johnmartin.auth.service;
+package com.johnmartin.auth.service.client;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;

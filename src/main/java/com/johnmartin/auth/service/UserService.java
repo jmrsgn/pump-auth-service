@@ -40,6 +40,11 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public void deleteById(UUID userId) {
+        LoggerUtility.d(clazz, "Execute method: [deleteById]");
+        userRepository.deleteById(userId);
+    }
+
     public UserEntity createUser(UserEntity userEntity) {
         try {
             return userRepository.save(userEntity);
