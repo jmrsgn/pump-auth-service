@@ -8,16 +8,14 @@ social:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/pump_auth
-    username: ${DB_NAME}
+    username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
 
   jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+    show-sql: false
 
 logging:
   level:
