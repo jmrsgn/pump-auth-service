@@ -12,10 +12,6 @@ public class ApiResponseUtils {
     private ApiResponseUtils() {
     }
 
-    public static ResponseEntity<Result<String>> createOkResponse(String message) {
-        return ResponseEntity.status(HttpStatus.OK).body(Result.success(message));
-    }
-
     public static ResponseEntity<Result<ApiErrorResponse>> createInternalServerErrorResponse(String message) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                              .body(Result.failure(new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
