@@ -112,6 +112,7 @@ public class AuthService {
             LoggerUtility.d(clazz, "Social user created");
         } catch (Exception e) {
             // When creating of social user fails, delete auth user
+            LoggerUtility.e(clazz, e.getMessage(), e);
             userService.deleteById(createdUser.getId());
         }
 
