@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.johnmartin.auth.constants.SecurityConstants;
 import com.johnmartin.auth.constants.api.ApiConstants;
+import com.johnmartin.auth.dto.response.Result;
 import com.johnmartin.auth.dto.response.UserResponse;
 import com.johnmartin.auth.entity.UserEntity;
 import com.johnmartin.auth.mapper.UserMapper;
@@ -36,8 +37,8 @@ public class InternalAuthController {
     }
 
     @PostMapping(ApiConstants.InternalPath.VALIDATE)
-    public ResponseEntity<UserResponse> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-                                                      @RequestHeader(value = SecurityConstants.REQUEST_ID, required = false) String requestId) {
+    public ResponseEntity<Result<UserResponse>> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+                                                              @RequestHeader(value = SecurityConstants.REQUEST_ID, required = false) String requestId) {
         LoggerUtility.d(clazz, "Execute method: [validateToken]");
         if (StringUtils.isBlank(requestId)) {
             requestId = UUID.randomUUID().toString();
@@ -50,7 +51,7 @@ public class InternalAuthController {
             String token = authorizationHeader.replace("Bearer ", StringUtils.EMPTY);
             String userId = jwtUtil.extractUserId(token);
             UserEntity user = userService.findById(UUID.fromString(userId));
-            return ResponseEntity.ok(UserMapper.toResponse(user));
+            return ResponseEntity.ok(Result.success(UserMapper.toResponse(user)));
         } finally {
             MDC.remove(SecurityConstants.REQUEST_ID);
         }
