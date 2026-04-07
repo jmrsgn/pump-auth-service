@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +36,7 @@ public class InternalAuthController {
         this.userService = userService;
     }
 
-    @GetMapping(ApiConstants.InternalPath.VALIDATE)
+    @PostMapping(ApiConstants.InternalPath.VALIDATE)
     public ResponseEntity<Result<UserResponse>> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
                                                               @RequestHeader(value = SecurityConstants.REQUEST_ID, required = false) String requestId) {
         LoggerUtility.d(clazz, "Execute method: [validateToken]");
