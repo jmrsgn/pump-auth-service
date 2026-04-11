@@ -38,6 +38,6 @@ public class AuthViewController {
         VerificationStatus status = verificationTokenService.verifyToken(token);
         // Add attributes to the model based on the verification status result
         authService.setModelData(model, status);
-        return ViewAttributes.Template.VERIFICATION_RESULT;
+        return ViewAttributes.HtmlTemplate.VERIFICATION_RESULT;
     }
 }

@@ -50,7 +50,7 @@ public class UserEntity {
     private Instant updatedAt;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = UserEntityConstants.Roles.TABLE_NAME, joinColumns = @JoinColumn(name = UserEntityConstants.Roles.COLUMN_USER_ID), inverseJoinColumns = @JoinColumn(name = UserEntityConstants.Roles.COLUMN_ROLE_ID))
+    @JoinTable(name = UserEntityConstants.UserRoles.TABLE_NAME, joinColumns = @JoinColumn(name = UserEntityConstants.UserRoles.COLUMN_USER_ID), inverseJoinColumns = @JoinColumn(name = UserEntityConstants.UserRoles.COLUMN_ROLE_ID))
     private Set<RoleEntity> roles = new HashSet<>();
 
     @Override

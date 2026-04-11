@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.MDC;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -37,15 +36,15 @@ public class InternalAuthController {
     }
 
     @PostMapping(ApiConstants.InternalPath.VALIDATE)
-    public ResponseEntity<Result<UserResponse>> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-                                                              @RequestHeader(value = SecurityConstants.REQUEST_ID, required = false) String requestId) {
+    public ResponseEntity<Result<UserResponse>> validateToken(@RequestHeader(org.springframework.http.HttpHeaders.AUTHORIZATION) String authorizationHeader,
+                                                              @RequestHeader(value = SecurityConstants.HttpHeaders.REQUEST_ID, required = false) String requestId) {
         LoggerUtility.d(clazz, "Execute method: [validateToken]");
         if (StringUtils.isBlank(requestId)) {
             requestId = UUID.randomUUID().toString();
         }
 
         LoggerUtility.d(clazz, String.format("requestId: [%s]", requestId));
-        MDC.put(SecurityConstants.REQUEST_ID, requestId);
+        MDC.put(SecurityConstants.HttpHeaders.REQUEST_ID, requestId);
 
         try {
             String token = authorizationHeader.replace("Bearer ", StringUtils.EMPTY);
@@ -53,7 +52,7 @@ public class InternalAuthController {
             UserEntity user = userService.findById(UUID.fromString(userId));
             return ResponseEntity.ok(Result.success(UserMapper.toResponse(user)));
         } finally {
-            MDC.remove(SecurityConstants.REQUEST_ID);
+            MDC.remove(SecurityConstants.HttpHeaders.REQUEST_ID);
         }
     }
 

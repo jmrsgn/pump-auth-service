@@ -1,6 +1,6 @@
 package com.johnmartin.auth.constants.api;
 
-public class ApiErrorConstants {
+public final class ApiErrorConstants {
 
     private ApiErrorConstants() {
     }

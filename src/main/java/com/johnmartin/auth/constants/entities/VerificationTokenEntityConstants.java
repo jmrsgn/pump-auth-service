@@ -1,6 +1,6 @@
 package com.johnmartin.auth.constants.entities;
 
-public class VerificationTokenEntityConstants {
+public final class VerificationTokenEntityConstants {
 
     private VerificationTokenEntityConstants() {
     }

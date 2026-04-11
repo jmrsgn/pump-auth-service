@@ -41,7 +41,7 @@ public class EmailService {
             Context context = new Context();
             context.setVariable(ViewAttributes.VERIFICATION_LINK, link);
 
-            String htmlContent = springTemplateEngine.process(ViewAttributes.Template.VERIFICATION_EMAIL, context);
+            String htmlContent = springTemplateEngine.process(ViewAttributes.HtmlTemplate.VERIFICATION_EMAIL, context);
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 

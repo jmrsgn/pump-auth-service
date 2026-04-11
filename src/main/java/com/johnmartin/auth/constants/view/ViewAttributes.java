@@ -1,6 +1,6 @@
 package com.johnmartin.auth.constants.view;
 
-public class ViewAttributes {
+public final class ViewAttributes {
 
     private ViewAttributes() {
     }
@@ -9,7 +9,11 @@ public class ViewAttributes {
     public static final String MESSAGE = "message";
     public static final String VERIFICATION_LINK = "verificationLink";
 
-    public static class Template {
+    public static final class HtmlTemplate {
+
+        private HtmlTemplate() {
+        }
+
         public static final String VERIFICATION_EMAIL = "verification-email";
         public static final String VERIFICATION_RESULT = "verification-result";
         public static final String VERIFICATION_ERROR = "verification-error";

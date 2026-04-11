@@ -32,7 +32,8 @@ public class SocialServiceClient {
         try {
             Result<SocialUserResponse> result = socialWebClient.post()
                                                                .uri(ApiConstants.PumpSocialService.API_CREATE_USER)
-                                                               .header(SecurityConstants.REQUEST_ID, requestId)
+                                                               .header(SecurityConstants.HttpHeaders.REQUEST_ID,
+                                                                       requestId)
                                                                .body(request)
                                                                .retrieve()
                                                                .body(new ParameterizedTypeReference<>() {
@@ -58,7 +59,8 @@ public class SocialServiceClient {
             Result<SocialUserResponse> result = socialWebClient.get()
                                                                .uri(ApiConstants.PumpSocialService.API_GET_USER + "/"
                                                                     + userId)
-                                                               .header(SecurityConstants.REQUEST_ID, requestId)
+                                                               .header(SecurityConstants.HttpHeaders.REQUEST_ID,
+                                                                       requestId)
                                                                .retrieve()
                                                                .body(new ParameterizedTypeReference<>() {
                                                                });

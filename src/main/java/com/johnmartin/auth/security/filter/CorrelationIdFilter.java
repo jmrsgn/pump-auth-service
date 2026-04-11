@@ -25,7 +25,7 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        String requestId = request.getHeader(SecurityConstants.REQUEST_ID);
+        String requestId = request.getHeader(SecurityConstants.HttpHeaders.REQUEST_ID);
 
         if (StringUtils.isBlank(requestId)) {
             requestId = UUID.randomUUID().toString();
@@ -33,14 +33,14 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
 
         LoggerUtility.d(clazz, String.format("requestId: [%s]", requestId));
 
-        MDC.put(SecurityConstants.REQUEST_ID, requestId);
-        request.setAttribute(SecurityConstants.REQUEST_ID, requestId);
-        response.setHeader(SecurityConstants.REQUEST_ID, requestId);
+        MDC.put(SecurityConstants.HttpHeaders.REQUEST_ID, requestId);
+        request.setAttribute(SecurityConstants.HttpHeaders.REQUEST_ID, requestId);
+        response.setHeader(SecurityConstants.HttpHeaders.REQUEST_ID, requestId);
 
         try {
             filterChain.doFilter(request, response);
         } finally {
-            MDC.remove(SecurityConstants.REQUEST_ID);
+            MDC.remove(SecurityConstants.HttpHeaders.REQUEST_ID);
         }
     }
 }

@@ -12,6 +12,6 @@ public class HtmlExceptionHandler {
     @ExceptionHandler({ BadRequestException.class, NotFoundException.class })
     public String handleVerificationErrors(Exception ex, Model model) {
         model.addAttribute(ViewAttributes.MESSAGE, ex.getMessage());
-        return ViewAttributes.Template.VERIFICATION_ERROR;
+        return ViewAttributes.HtmlTemplate.VERIFICATION_ERROR;
     }
 }

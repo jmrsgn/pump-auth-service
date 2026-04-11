@@ -100,7 +100,7 @@ public class AuthService {
 
         SocialUserResponse socialUser = null;
         try {
-            String requestId = (String) request.getAttribute(SecurityConstants.Attribute.REQUEST_ID);
+            String requestId = (String) request.getAttribute(SecurityConstants.HttpHeaders.REQUEST_ID);
             // Create Social User
             CreateSocialUserRequest createSocialUserRequest = new CreateSocialUserRequest(createdUser.getId()
                                                                                                      .toString(),
@@ -148,7 +148,7 @@ public class AuthService {
 
         SocialUserResponse socialUser = null;
         try {
-            String requestId = (String) request.getAttribute(SecurityConstants.Attribute.REQUEST_ID);
+            String requestId = (String) request.getAttribute(SecurityConstants.HttpHeaders.REQUEST_ID);
             socialUser = socialServiceClient.getSocialUser(requestId, user.getId().toString());
         } catch (Exception e) {
             LoggerUtility.e(clazz, e.getMessage(), e);

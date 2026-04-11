@@ -1,6 +1,6 @@
 package com.johnmartin.auth.constants;
 
-public class ValidationConstants {
+public final class ValidationConstants {
 
     private ValidationConstants() {
     }

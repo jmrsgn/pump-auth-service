@@ -1,6 +1,6 @@
 package com.johnmartin.auth.constants.entities;
 
-public class RoleEntityConstants {
+public final class RoleEntityConstants {
 
     private RoleEntityConstants() {
     }
