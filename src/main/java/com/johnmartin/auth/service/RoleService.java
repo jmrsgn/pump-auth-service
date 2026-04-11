@@ -1,10 +1,10 @@
 package com.johnmartin.auth.service;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
+import com.johnmartin.auth.constants.api.ApiErrorConstants;
 import com.johnmartin.auth.entity.RoleEntity;
+import com.johnmartin.auth.exception.NotFoundException;
 import com.johnmartin.auth.repository.RoleRepository;
 
 @Service
@@ -16,7 +16,7 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
 
-    public Optional<RoleEntity> getRole(int role) {
-        return roleRepository.findById(role);
+    public RoleEntity getRole(int role) {
+        return roleRepository.findById(role).orElseThrow(() -> new NotFoundException(ApiErrorConstants.ROLE_NOT_FOUND));
     }
 }

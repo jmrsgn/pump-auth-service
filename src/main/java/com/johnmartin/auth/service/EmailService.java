@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import com.johnmartin.auth.constants.api.ApiErrorConstants;
+import com.johnmartin.auth.constants.view.ViewAttributes;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
 import jakarta.mail.internet.MimeMessage;
@@ -28,18 +30,18 @@ public class EmailService {
     public void sendVerificationEmail(String to, String link) {
         LoggerUtility.d(clazz, "Execute method: [sendVerificationEmail]");
         if (to == null || StringUtils.isBlank(to)) {
-            throw new IllegalArgumentException("Email is required");
+            throw new IllegalArgumentException(ApiErrorConstants.EMAIL_IS_REQUIRED);
         }
 
         if (link == null || link.isBlank()) {
-            throw new IllegalArgumentException("Verification link is required");
+            throw new IllegalArgumentException(ApiErrorConstants.VERIFICATION_LINK_IS_REQUIRED);
         }
 
         try {
             Context context = new Context();
-            context.setVariable("verificationLink", link);
+            context.setVariable(ViewAttributes.VERIFICATION_LINK, link);
 
-            String htmlContent = springTemplateEngine.process("verification-email", context);
+            String htmlContent = springTemplateEngine.process(ViewAttributes.Template.VERIFICATION_EMAIL, context);
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
@@ -49,7 +51,7 @@ public class EmailService {
 
             javaMailSender.send(message);
         } catch (Exception ex) {
-            throw new RuntimeException("Failed to send email", ex);
+            throw new RuntimeException(ApiErrorConstants.FAILED_TO_SEND_EMAIL, ex);
         }
     }
 }

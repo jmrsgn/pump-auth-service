@@ -23,6 +23,6 @@ public class RoleEntity {
 
     @Override
     public String toString() {
-        return "RoleEntity{" + "id=" + id + ", name='" + name + '\'' + ", description='" + description + '\'' + '}';
+        return "RoleEntity{" + "userId=" + id + ", name='" + name + '\'' + ", description='" + description + '\'' + '}';
     }
 }

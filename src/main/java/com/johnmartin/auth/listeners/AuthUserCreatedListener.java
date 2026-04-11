@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.johnmartin.auth.constants.api.ApiConstants;
+import com.johnmartin.auth.constants.api.ApiErrorConstants;
 import com.johnmartin.auth.events.AuthUserCreatedEvent;
 import com.johnmartin.auth.service.EmailService;
 import com.johnmartin.auth.service.VerificationTokenService;
@@ -28,7 +29,7 @@ public class AuthUserCreatedListener {
         // This method is automatically called by Spring using the event publisher
         LoggerUtility.d(clazz, "Execute method: [handleUserRegistered]");
         if (event == null || event.userId() == null || event.email() == null) {
-            throw new IllegalArgumentException("Invalid event data");
+            throw new IllegalArgumentException(ApiErrorConstants.INVALID_EVENT_DATA);
         }
 
         String token = verificationTokenService.generateToken(event.userId());

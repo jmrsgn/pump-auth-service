@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.johnmartin.auth.constants.SecurityConstants;
 import com.johnmartin.auth.security.JwtUtil;
 
 import jakarta.servlet.FilterChain;
@@ -32,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+        String header = request.getHeader(SecurityConstants.AUTHORIZATION);
 
         if (StringUtils.isBlank(header) || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.johnmartin.auth.constants.SecurityConstants;
+import com.johnmartin.auth.constants.api.ApiErrorConstants;
 import com.johnmartin.auth.constants.view.ViewAttributes;
 import com.johnmartin.auth.dto.request.CreateSocialUserRequest;
 import com.johnmartin.auth.dto.request.LoginRequest;
@@ -21,7 +22,6 @@ import com.johnmartin.auth.events.AuthUserCreatedEvent;
 import com.johnmartin.auth.exception.*;
 import com.johnmartin.auth.security.JwtUtil;
 import com.johnmartin.auth.service.client.SocialServiceClient;
-import com.johnmartin.auth.utilities.LogMaskUtility;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
 import io.micrometer.common.util.StringUtils;
@@ -65,15 +65,15 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse register(HttpServletRequest request, RegisterRequest registerRequest) {
-        LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", LogMaskUtility.mask(request)));
+        LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", request));
 
         if (request == null) {
-            throw new BadRequestException("Invalid request");
+            throw new BadRequestException(ApiErrorConstants.INVALID_REQUEST);
         }
 
         // Check for user email duplicates
         if (userService.findOptionalByEmail(registerRequest.email()).isPresent()) {
-            throw new ConflictException("User with this email already exists");
+            throw new ConflictException(ApiErrorConstants.USER_WITH_THIS_EMAIL_ALREADY_EXIST);
         }
 
         LoggerUtility.d(clazz, "Creating user");
@@ -87,8 +87,7 @@ public class AuthService {
         user.setPasswordHash(passwordEncoder.encode(registerRequest.password()));
         user.setEnabled(Boolean.FALSE); // Users must activate first the account
 
-        RoleEntity userRole = roleService.getRole(registerRequest.role())
-                                         .orElseThrow(() -> new NotFoundException("Invalid role"));
+        RoleEntity userRole = roleService.getRole(registerRequest.role().getCode());
 
         user.getRoles().add(userRole);
 
@@ -101,7 +100,7 @@ public class AuthService {
 
         SocialUserResponse socialUser = null;
         try {
-            String requestId = (String) request.getAttribute(SecurityConstants.REQUEST_ID);
+            String requestId = (String) request.getAttribute(SecurityConstants.Attribute.REQUEST_ID);
             // Create Social User
             CreateSocialUserRequest createSocialUserRequest = new CreateSocialUserRequest(createdUser.getId()
                                                                                                      .toString(),
@@ -127,36 +126,36 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse login(HttpServletRequest request, LoginRequest loginRequest) {
-        LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", LogMaskUtility.mask(request)));
+        LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", request));
 
         if (request == null) {
-            throw new BadRequestException("Invalid request");
+            throw new BadRequestException(ApiErrorConstants.INVALID_REQUEST);
         }
 
         if (StringUtils.isBlank(loginRequest.email()) || StringUtils.isBlank(loginRequest.password())) {
-            throw new BadRequestException("Email and password are required");
+            throw new BadRequestException(ApiErrorConstants.EMAIL_AND_PASSWORD_ARE_REQUIRED);
         }
 
         UserEntity user = userService.findByEmail(loginRequest.email());
 
         if (!passwordEncoder.matches(loginRequest.password(), user.getPasswordHash())) {
-            throw new UnauthorizedException("Invalid credentials");
+            throw new UnauthorizedException(ApiErrorConstants.INVALID_CREDENTIALS);
         }
 
         if (Boolean.FALSE.equals(user.getEnabled())) {
-            throw new ForbiddenException("User account is not yet activated");
+            throw new ForbiddenException(ApiErrorConstants.USER_ACCOUNT_IS_NOT_YET_ACTIVATED);
         }
 
         SocialUserResponse socialUser = null;
         try {
-            String requestId = (String) request.getAttribute(SecurityConstants.REQUEST_ID);
+            String requestId = (String) request.getAttribute(SecurityConstants.Attribute.REQUEST_ID);
             socialUser = socialServiceClient.getSocialUser(requestId, user.getId().toString());
         } catch (Exception e) {
             LoggerUtility.e(clazz, e.getMessage(), e);
         }
 
         if (socialUser == null) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException(ApiErrorConstants.USER_NOT_FOUND);
         }
 
         String token = jwtUtil.generateToken(socialUser.id());

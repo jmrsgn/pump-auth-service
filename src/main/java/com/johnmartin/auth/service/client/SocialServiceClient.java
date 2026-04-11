@@ -6,6 +6,7 @@ import org.springframework.web.client.RestClient;
 
 import com.johnmartin.auth.constants.SecurityConstants;
 import com.johnmartin.auth.constants.api.ApiConstants;
+import com.johnmartin.auth.constants.api.ApiErrorConstants;
 import com.johnmartin.auth.dto.request.CreateSocialUserRequest;
 import com.johnmartin.auth.dto.response.Result;
 import com.johnmartin.auth.dto.response.SocialUserResponse;
@@ -38,12 +39,12 @@ public class SocialServiceClient {
                                                                });
 
             if (result == null || result.getData().isEmpty()) {
-                throw new RuntimeException("Failed to create social user");
+                throw new RuntimeException(ApiErrorConstants.SOCIAL_USER_NOT_FOUND);
             }
 
             return result.getData().get();
         } catch (Exception ex) {
-            throw new RuntimeException("Failed to create social user", ex);
+            throw new RuntimeException(ApiErrorConstants.FAILED_TO_FETCH_SOCIAL_USER, ex);
         }
     }
 
@@ -63,12 +64,12 @@ public class SocialServiceClient {
                                                                });
 
             if (result == null || result.getData().isEmpty()) {
-                throw new RuntimeException("Social user not found");
+                throw new RuntimeException(ApiErrorConstants.SOCIAL_USER_NOT_FOUND);
             }
 
             return result.getData().get();
         } catch (Exception ex) {
-            throw new RuntimeException("Failed to fetch social user", ex);
+            throw new RuntimeException(ApiErrorConstants.FAILED_TO_FETCH_SOCIAL_USER, ex);
         }
     }
 }

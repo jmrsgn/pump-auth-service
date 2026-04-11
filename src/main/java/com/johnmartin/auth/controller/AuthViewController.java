@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.johnmartin.auth.constants.api.ApiConstants;
+import com.johnmartin.auth.constants.view.ViewAttributes;
 import com.johnmartin.auth.enums.VerificationStatus;
 import com.johnmartin.auth.service.AuthService;
 import com.johnmartin.auth.service.VerificationTokenService;
@@ -37,6 +38,6 @@ public class AuthViewController {
         VerificationStatus status = verificationTokenService.verifyToken(token);
         // Add attributes to the model based on the verification status result
         authService.setModelData(model, status);
-        return "verification-result";
+        return ViewAttributes.Template.VERIFICATION_RESULT;
     }
 }
