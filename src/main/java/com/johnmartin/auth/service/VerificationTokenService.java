@@ -6,7 +6,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.johnmartin.auth.constants.SecurityConstants;
-import com.johnmartin.auth.constants.api.ApiErrorConstants;
+import com.johnmartin.auth.constants.error.AuthErrorConstants;
+import com.johnmartin.auth.constants.error.ValidationErrorConstants;
 import com.johnmartin.auth.entity.UserEntity;
 import com.johnmartin.auth.entity.VerificationTokenEntity;
 import com.johnmartin.auth.enums.VerificationStatus;
@@ -31,7 +32,7 @@ public class VerificationTokenService {
     public String generateToken(UUID userId) {
         LoggerUtility.d(clazz, "Execute method: [generateToken]");
         if (userId == null) {
-            throw new IllegalArgumentException(ApiErrorConstants.USER_ID_IS_REQUIRED);
+            throw new IllegalArgumentException(ValidationErrorConstants.USER_ID_IS_REQUIRED);
         }
 
         // Delete old tokens (cleanup)
@@ -51,10 +52,10 @@ public class VerificationTokenService {
         LoggerUtility.d(clazz, "Execute method: [verifyToken]");
 
         VerificationTokenEntity verificationToken = verificationTokenRepository.findByToken(token)
-                                                                               .orElseThrow(() -> new NotFoundException(ApiErrorConstants.INVALID_TOKEN));
+                                                                               .orElseThrow(() -> new NotFoundException(AuthErrorConstants.INVALID_TOKEN));
 
         if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new BadRequestException(ApiErrorConstants.TOKEN_IS_EXPIRED);
+            throw new BadRequestException(AuthErrorConstants.TOKEN_IS_EXPIRED);
         }
 
         UserEntity user = userService.findById(verificationToken.getUserId());

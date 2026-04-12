@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import com.johnmartin.auth.constants.api.ApiErrorConstants;
+import com.johnmartin.auth.constants.error.ExternalServiceErrorConstants;
+import com.johnmartin.auth.constants.error.ValidationErrorConstants;
 import com.johnmartin.auth.constants.view.ViewAttributes;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
@@ -30,11 +31,11 @@ public class EmailService {
     public void sendVerificationEmail(String to, String link) {
         LoggerUtility.d(clazz, "Execute method: [sendVerificationEmail]");
         if (to == null || StringUtils.isBlank(to)) {
-            throw new IllegalArgumentException(ApiErrorConstants.EMAIL_IS_REQUIRED);
+            throw new IllegalArgumentException(ValidationErrorConstants.EMAIL_IS_REQUIRED);
         }
 
         if (link == null || link.isBlank()) {
-            throw new IllegalArgumentException(ApiErrorConstants.VERIFICATION_LINK_IS_REQUIRED);
+            throw new IllegalArgumentException(ValidationErrorConstants.VERIFICATION_LINK_IS_REQUIRED);
         }
 
         try {
@@ -51,7 +52,7 @@ public class EmailService {
 
             javaMailSender.send(message);
         } catch (Exception ex) {
-            throw new RuntimeException(ApiErrorConstants.FAILED_TO_SEND_EMAIL, ex);
+            throw new RuntimeException(ExternalServiceErrorConstants.FAILED_TO_SEND_EMAIL, ex);
         }
     }
 }

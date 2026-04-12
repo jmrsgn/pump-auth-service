@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.johnmartin.auth.constants.SecurityConstants;
-import com.johnmartin.auth.constants.api.ApiErrorConstants;
+import com.johnmartin.auth.constants.error.AuthErrorConstants;
+import com.johnmartin.auth.constants.error.SystemErrorConstants;
+import com.johnmartin.auth.constants.error.UserErrorConstants;
+import com.johnmartin.auth.constants.error.ValidationErrorConstants;
 import com.johnmartin.auth.constants.view.ViewAttributes;
 import com.johnmartin.auth.dto.request.CreateSocialUserRequest;
 import com.johnmartin.auth.dto.request.LoginRequest;
@@ -68,12 +71,12 @@ public class AuthService {
         LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", request));
 
         if (request == null) {
-            throw new BadRequestException(ApiErrorConstants.INVALID_REQUEST);
+            throw new BadRequestException(SystemErrorConstants.INVALID_REQUEST);
         }
 
         // Check for user email duplicates
         if (userService.findOptionalByEmail(registerRequest.email()).isPresent()) {
-            throw new ConflictException(ApiErrorConstants.USER_WITH_THIS_EMAIL_ALREADY_EXIST);
+            throw new ConflictException(UserErrorConstants.USER_WITH_THIS_EMAIL_ALREADY_EXIST);
         }
 
         LoggerUtility.d(clazz, "Creating user");
@@ -129,21 +132,21 @@ public class AuthService {
         LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", request));
 
         if (request == null) {
-            throw new BadRequestException(ApiErrorConstants.INVALID_REQUEST);
+            throw new BadRequestException(SystemErrorConstants.INVALID_REQUEST);
         }
 
         if (StringUtils.isBlank(loginRequest.email()) || StringUtils.isBlank(loginRequest.password())) {
-            throw new BadRequestException(ApiErrorConstants.EMAIL_AND_PASSWORD_ARE_REQUIRED);
+            throw new BadRequestException(ValidationErrorConstants.EMAIL_AND_PASSWORD_ARE_REQUIRED);
         }
 
         UserEntity user = userService.findByEmail(loginRequest.email());
 
         if (!passwordEncoder.matches(loginRequest.password(), user.getPasswordHash())) {
-            throw new UnauthorizedException(ApiErrorConstants.INVALID_CREDENTIALS);
+            throw new UnauthorizedException(AuthErrorConstants.INVALID_CREDENTIALS);
         }
 
         if (Boolean.FALSE.equals(user.getEnabled())) {
-            throw new ForbiddenException(ApiErrorConstants.USER_ACCOUNT_IS_NOT_YET_ACTIVATED);
+            throw new ForbiddenException(UserErrorConstants.USER_ACCOUNT_IS_NOT_YET_ACTIVATED);
         }
 
         SocialUserResponse socialUser = null;
@@ -155,7 +158,7 @@ public class AuthService {
         }
 
         if (socialUser == null) {
-            throw new NotFoundException(ApiErrorConstants.USER_NOT_FOUND);
+            throw new NotFoundException(UserErrorConstants.USER_NOT_FOUND);
         }
 
         String token = jwtUtil.generateToken(socialUser.id());
