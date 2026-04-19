@@ -6,6 +6,7 @@ public record SocialUserResponse(String id,
                                  String email,
                                  String profileImageUrl,
                                  String bio,
+
                                  long followersNo,
                                  long followingNo,
                                  boolean isFollowing) {

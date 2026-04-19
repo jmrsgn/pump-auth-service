@@ -71,6 +71,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Result<ApiErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        LoggerUtility.e(clazz, ex.getMessage(), ex);
         // Get the first error message will be thrown in Bean annotations for requests
         String message = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
         return ApiResponseUtils.createBadRequestErrorResponse(message);
@@ -85,6 +86,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Result<ApiErrorResponse>> handleConstraintViolationException(ConstraintViolationException ex) {
+        LoggerUtility.e(clazz, ex.getMessage(), ex);
         String message = ex.getConstraintViolations().iterator().next().getMessage();
         return ApiResponseUtils.createBadRequestErrorResponse(message);
     }
