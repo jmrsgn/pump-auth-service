@@ -9,6 +9,8 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.johnmartin.auth.constants.error.SystemErrorConstants;
+
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -23,7 +25,7 @@ public class JwtUtil {
     public JwtUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") long expirationMillis) {
 
         if (StringUtils.isBlank(secretKey)) {
-            throw new IllegalArgumentException("JWT secret cannot be null or empty");
+            throw new IllegalArgumentException(SystemErrorConstants.JWT_SECRET_CANNOT_BE_NULL_OR_EMPTY);
         }
 
         byte[] decodedKey = Base64.getDecoder().decode(secretKey.getBytes(StandardCharsets.UTF_8));
@@ -33,7 +35,7 @@ public class JwtUtil {
 
     public String generateToken(String userId) {
         if (StringUtils.isBlank(userId)) {
-            throw new IllegalArgumentException("User ID cannot be blank when generating token");
+            throw new IllegalArgumentException(SystemErrorConstants.USER_ID_CANNOT_BE_BLANK_WHEN_GENERATING_TOKEN);
         }
 
         Date now = new Date();

@@ -2,6 +2,7 @@ package com.johnmartin.auth.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.johnmartin.auth.constants.error.SystemErrorConstants;
 
 public enum Role {
 
@@ -39,6 +40,6 @@ public enum Role {
                 return role;
             }
         }
-        throw new IllegalArgumentException("Invalid role code: " + code);
+        throw new IllegalArgumentException(SystemErrorConstants.INVALID_ROLE_CODE + code);
     }
 }
