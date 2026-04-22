@@ -40,12 +40,12 @@ public class SocialServiceClient {
                                                                });
 
             if (result == null || result.getData().isEmpty()) {
-                throw new RuntimeException(ExternalServiceErrorConstants.SOCIAL_USER_NOT_FOUND);
+                throw new RuntimeException(ExternalServiceErrorConstants.FAILED_TO_CREATE_USER);
             }
 
             return result.getData().get();
         } catch (Exception ex) {
-            throw new RuntimeException(ExternalServiceErrorConstants.FAILED_TO_FETCH_SOCIAL_USER, ex);
+            throw new RuntimeException(ExternalServiceErrorConstants.FAILED_TO_CREATE_USER, ex);
         }
     }
 

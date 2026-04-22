@@ -154,11 +154,7 @@ public class AuthService {
             String requestId = (String) request.getAttribute(SecurityConstants.HttpHeaders.REQUEST_ID);
             socialUser = socialServiceClient.getSocialUser(requestId, user.getId().toString());
         } catch (Exception e) {
-            LoggerUtility.e(clazz, e.getMessage(), e);
-        }
-
-        if (socialUser == null) {
-            throw new NotFoundException(UserErrorConstants.USER_NOT_FOUND);
+            throw new NotFoundException(e.getMessage());
         }
 
         String token = jwtUtil.generateToken(socialUser.id());
