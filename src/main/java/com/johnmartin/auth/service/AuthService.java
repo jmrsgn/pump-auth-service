@@ -88,7 +88,8 @@ public class AuthService {
         user.setEmail(registerRequest.email());
         user.setPhone(registerRequest.phone());
         user.setPasswordHash(passwordEncoder.encode(registerRequest.password()));
-        user.setEnabled(Boolean.FALSE); // Users must activate first the account
+        // user.setEnabled(Boolean.FALSE); // Users must activate first the account
+        user.setEnabled(Boolean.TRUE);
 
         RoleEntity userRole = roleService.getRole(registerRequest.role().getCode());
 
@@ -149,7 +150,7 @@ public class AuthService {
             throw new ForbiddenException(UserErrorConstants.USER_ACCOUNT_IS_NOT_YET_ACTIVATED);
         }
 
-        SocialUserResponse socialUser = null;
+        SocialUserResponse socialUser;
         try {
             String requestId = (String) request.getAttribute(SecurityConstants.HttpHeaders.REQUEST_ID);
             socialUser = socialServiceClient.getSocialUser(requestId, user.getId().toString());

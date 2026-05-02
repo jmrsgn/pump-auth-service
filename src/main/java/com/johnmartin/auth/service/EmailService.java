@@ -28,9 +28,9 @@ public class EmailService {
         this.springTemplateEngine = springTemplateEngine;
     }
 
-    public void sendVerificationEmail(String to, String link) {
+    public void sendVerificationEmail(String email, String link) {
         LoggerUtility.d(clazz, "Execute method: [sendVerificationEmail]");
-        if (to == null || StringUtils.isBlank(to)) {
+        if (email == null || StringUtils.isBlank(email)) {
             throw new IllegalArgumentException(ValidationErrorConstants.EMAIL_IS_REQUIRED);
         }
 
@@ -46,7 +46,7 @@ public class EmailService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setTo(to);
+            helper.setTo(email);
             helper.setSubject(SUBJECT);
             helper.setText(htmlContent, true); // true = HTML
 
