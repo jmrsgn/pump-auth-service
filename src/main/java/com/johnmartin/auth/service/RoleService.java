@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.johnmartin.auth.constants.error.UserErrorConstants;
 import com.johnmartin.auth.entity.RoleEntity;
-import com.johnmartin.auth.exception.NotFoundException;
+import com.johnmartin.auth.exceptions.NotFoundException;
 import com.johnmartin.auth.repository.RoleRepository;
 
 @Service

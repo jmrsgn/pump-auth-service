@@ -33,9 +33,9 @@ public final class ApiConstants {
         public static final String VALIDATE = "/validate";
     }
 
-    public static final class Error {
+    public static final class HttpError {
 
-        private Error() {
+        private HttpError() {
         }
 
         public static final String UNAUTHORIZED = "Unauthorized";

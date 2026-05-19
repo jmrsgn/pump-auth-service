@@ -22,7 +22,7 @@ import com.johnmartin.auth.entity.RoleEntity;
 import com.johnmartin.auth.entity.UserEntity;
 import com.johnmartin.auth.enums.VerificationStatus;
 import com.johnmartin.auth.events.AuthUserCreatedEvent;
-import com.johnmartin.auth.exception.*;
+import com.johnmartin.auth.exceptions.*;
 import com.johnmartin.auth.security.JwtUtil;
 import com.johnmartin.auth.service.client.SocialServiceClient;
 import com.johnmartin.auth.utilities.LoggerUtility;

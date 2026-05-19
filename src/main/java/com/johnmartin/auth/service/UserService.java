@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.johnmartin.auth.constants.error.ExternalServiceErrorConstants;
 import com.johnmartin.auth.constants.error.UserErrorConstants;
 import com.johnmartin.auth.entity.UserEntity;
-import com.johnmartin.auth.exception.NotFoundException;
+import com.johnmartin.auth.exceptions.NotFoundException;
 import com.johnmartin.auth.repository.UserRepository;
 import com.johnmartin.auth.utilities.LoggerUtility;
 

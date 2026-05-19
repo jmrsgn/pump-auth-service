@@ -1,4 +1,4 @@
-package com.johnmartin.auth.exception;
+package com.johnmartin.auth.exceptions;
 
 public class ConflictException extends RuntimeException {
     public ConflictException() {

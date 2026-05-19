@@ -1,4 +1,4 @@
-package com.johnmartin.auth.exception;
+package com.johnmartin.auth.exceptions;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;

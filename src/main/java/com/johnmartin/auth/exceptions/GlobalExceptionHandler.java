@@ -1,4 +1,4 @@
-package com.johnmartin.auth.exception;
+package com.johnmartin.auth.exceptions;
 
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;

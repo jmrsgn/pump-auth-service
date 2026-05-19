@@ -11,8 +11,8 @@ import com.johnmartin.auth.constants.error.ValidationErrorConstants;
 import com.johnmartin.auth.entity.UserEntity;
 import com.johnmartin.auth.entity.VerificationTokenEntity;
 import com.johnmartin.auth.enums.VerificationStatus;
-import com.johnmartin.auth.exception.BadRequestException;
-import com.johnmartin.auth.exception.NotFoundException;
+import com.johnmartin.auth.exceptions.BadRequestException;
+import com.johnmartin.auth.exceptions.NotFoundException;
 import com.johnmartin.auth.repository.VerificationTokenRepository;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
