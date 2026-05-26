@@ -1,4 +1,4 @@
-package com.johnmartin.auth.service.client;
+package com.johnmartin.auth.service.internal.client;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;

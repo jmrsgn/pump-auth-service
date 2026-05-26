@@ -33,6 +33,6 @@ public enum UserRole {
                 return role;
             }
         }
-        throw new IllegalArgumentException(SystemErrorConstants.INVALID_ROLE_CODE + value);
+        throw new IllegalArgumentException(SystemErrorConstants.INVALID_ROLE_CODE + ": " + value);
     }
 }
