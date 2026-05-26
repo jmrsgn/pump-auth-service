@@ -1,16 +1,17 @@
 package com.johnmartin.auth.entity;
 
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.johnmartin.auth.constants.entities.UserEntityConstants;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,23 +24,26 @@ public class UserEntity {
     @Column(nullable = false, updatable = false, name = UserEntityConstants.COLUMN_ID)
     private UUID id;
 
-    @Column(name = UserEntityConstants.COLUMN_FIRST_NAME)
+    @Column(nullable = false, name = UserEntityConstants.COLUMN_FIRST_NAME)
     private String firstName;
 
-    @Column(name = UserEntityConstants.COLUMN_LAST_NAME)
+    @Column(nullable = false, name = UserEntityConstants.COLUMN_LAST_NAME)
     private String lastName;
 
-    @Column(name = UserEntityConstants.COLUMN_EMAIL)
+    @Column(nullable = false, name = UserEntityConstants.COLUMN_EMAIL)
     private String email;
 
-    @Column(name = UserEntityConstants.COLUMN_PHONE)
+    @Column(nullable = false, name = UserEntityConstants.COLUMN_PHONE)
     private String phone;
 
-    @Column(name = UserEntityConstants.COLUMN_PASSWORD_HASH)
+    @Column(nullable = false, name = UserEntityConstants.COLUMN_PASSWORD_HASH)
     private String passwordHash;
 
-    @Column(name = UserEntityConstants.COLUMN_ENABLED)
+    @Column(nullable = false, name = UserEntityConstants.COLUMN_ENABLED)
     private Boolean enabled;
+
+    @Column(nullable = false, name = UserEntityConstants.COLUMN_ROLE)
+    private String role;
 
     @CreationTimestamp
     @Column(name = UserEntityConstants.COLUMN_CREATED_AT, updatable = false)
@@ -48,10 +52,6 @@ public class UserEntity {
     @CreationTimestamp
     @Column(name = UserEntityConstants.COLUMN_UPDATED_AT)
     private Instant updatedAt;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = UserEntityConstants.UserRoles.TABLE_NAME, joinColumns = @JoinColumn(name = UserEntityConstants.UserRoles.COLUMN_USER_ID), inverseJoinColumns = @JoinColumn(name = UserEntityConstants.UserRoles.COLUMN_ROLE_ID))
-    private Set<RoleEntity> roles = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

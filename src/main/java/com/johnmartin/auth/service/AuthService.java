@@ -18,8 +18,8 @@ import com.johnmartin.auth.dto.request.LoginRequest;
 import com.johnmartin.auth.dto.request.RegisterRequest;
 import com.johnmartin.auth.dto.response.AuthResponse;
 import com.johnmartin.auth.dto.response.SocialUserResponse;
-import com.johnmartin.auth.entity.RoleEntity;
 import com.johnmartin.auth.entity.UserEntity;
+import com.johnmartin.auth.enums.UserRole;
 import com.johnmartin.auth.enums.VerificationStatus;
 import com.johnmartin.auth.events.AuthUserCreatedEvent;
 import com.johnmartin.auth.exceptions.*;
@@ -37,8 +37,6 @@ public class AuthService {
 
     private final UserService userService;
 
-    private final RoleService roleService;
-
     private final SocialServiceClient socialServiceClient;
 
     private final JwtUtil jwtUtil;
@@ -47,13 +45,11 @@ public class AuthService {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public AuthService(UserService userService,
-                       RoleService roleService,
                        SocialServiceClient socialServiceClient,
                        JwtUtil jwtUtil,
                        PasswordEncoder passwordEncoder,
                        ApplicationEventPublisher applicationEventPublisher) {
         this.userService = userService;
-        this.roleService = roleService;
         this.socialServiceClient = socialServiceClient;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
@@ -88,12 +84,10 @@ public class AuthService {
         user.setEmail(registerRequest.email());
         user.setPhone(registerRequest.phone());
         user.setPasswordHash(passwordEncoder.encode(registerRequest.password()));
+        // All users that will be registered via mobile app,will all be treated as normal users
+        user.setRole(UserRole.ROLE_USER.getValue());
         // user.setEnabled(Boolean.FALSE); // Users must activate first the account
         user.setEnabled(Boolean.TRUE);
-
-        RoleEntity userRole = roleService.getRole(registerRequest.role().getCode());
-
-        user.getRoles().add(userRole);
 
         // Save user to DB
         UserEntity createdUser = userService.createUser(user);

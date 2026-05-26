@@ -108,8 +108,6 @@ The Auth Service uses a **relational database schema** for identity management.
 | Table | Purpose |
 |------|---------|
 | users | stores account information |
-| roles | defines system roles |
-| user_roles | maps users to roles |
 
 Relationship:
 

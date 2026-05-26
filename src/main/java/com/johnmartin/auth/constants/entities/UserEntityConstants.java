@@ -13,16 +13,7 @@ public final class UserEntityConstants {
     public static final String COLUMN_PHONE = "phone";
     public static final String COLUMN_PASSWORD_HASH = "password_hash";
     public static final String COLUMN_ENABLED = "enabled";
+    public static final String COLUMN_ROLE = "role";
     public static final String COLUMN_CREATED_AT = "created_at";
     public static final String COLUMN_UPDATED_AT = "updated_at";
-
-    public static final class UserRoles {
-
-        private UserRoles() {
-        }
-
-        public static final String TABLE_NAME = "user_roles";
-        public static final String COLUMN_USER_ID = "user_id";
-        public static final String COLUMN_ROLE_ID = "role_id";
-    }
 }
