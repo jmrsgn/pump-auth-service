@@ -17,10 +17,10 @@ public class SocialServiceClient {
 
     private static final Class<SocialServiceClient> clazz = SocialServiceClient.class;
 
-    private final RestClient socialWebClient;
+    private final RestClient socialServiceRestClient;
 
-    public SocialServiceClient(RestClient socialWebClient) {
-        this.socialWebClient = socialWebClient;
+    public SocialServiceClient(RestClient socialServiceRestClient) {
+        this.socialServiceRestClient = socialServiceRestClient;
     }
 
     public SocialUserResponse createUser(String requestId, CreateSocialUserRequest request) {
@@ -30,14 +30,14 @@ public class SocialServiceClient {
                                       request));
 
         try {
-            Result<SocialUserResponse> result = socialWebClient.post()
-                                                               .uri(ApiConstants.PumpSocialService.API_CREATE_USER)
-                                                               .header(SecurityConstants.HttpHeaders.REQUEST_ID,
-                                                                       requestId)
-                                                               .body(request)
-                                                               .retrieve()
-                                                               .body(new ParameterizedTypeReference<>() {
-                                                               });
+            Result<SocialUserResponse> result = socialServiceRestClient.post()
+                                                                       .uri(ApiConstants.PumpSocialService.API_CREATE_USER)
+                                                                       .header(SecurityConstants.HttpHeaders.REQUEST_ID,
+                                                                               requestId)
+                                                                       .body(request)
+                                                                       .retrieve()
+                                                                       .body(new ParameterizedTypeReference<>() {
+                                                                       });
 
             if (result == null || result.getData().isEmpty()) {
                 throw new RuntimeException(ExternalServiceErrorConstants.FAILED_TO_CREATE_USER);
@@ -56,14 +56,14 @@ public class SocialServiceClient {
                                       userId));
 
         try {
-            Result<SocialUserResponse> result = socialWebClient.get()
-                                                               .uri(ApiConstants.PumpSocialService.API_GET_USER + "/"
-                                                                    + userId)
-                                                               .header(SecurityConstants.HttpHeaders.REQUEST_ID,
-                                                                       requestId)
-                                                               .retrieve()
-                                                               .body(new ParameterizedTypeReference<>() {
-                                                               });
+            Result<SocialUserResponse> result = socialServiceRestClient.get()
+                                                                       .uri(ApiConstants.PumpSocialService.API_GET_USER
+                                                                            + "/" + userId)
+                                                                       .header(SecurityConstants.HttpHeaders.REQUEST_ID,
+                                                                               requestId)
+                                                                       .retrieve()
+                                                                       .body(new ParameterizedTypeReference<>() {
+                                                                       });
 
             if (result == null || result.getData().isEmpty()) {
                 throw new RuntimeException(ExternalServiceErrorConstants.SOCIAL_USER_NOT_FOUND);
