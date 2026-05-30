@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.johnmartin.auth.constants.SecurityConstants;
 import com.johnmartin.auth.constants.api.ApiConstants;
-import com.johnmartin.auth.dto.response.Result;
+import com.johnmartin.auth.dto.common.Result;
 import com.johnmartin.auth.dto.response.UserResponse;
 import com.johnmartin.auth.entity.UserEntity;
 import com.johnmartin.auth.mapper.UserMapper;

@@ -45,15 +45,4 @@ public final class ApiConstants {
         public static final String FORBIDDEN = "Forbidden";
         public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
     }
-
-    public static final class PumpSocialService {
-
-        private PumpSocialService() {
-        }
-
-        // public static final String URL = "http://pump-auth-service:8080";
-        public static final String URL = "http://localhost:8081";
-        public static final String API_CREATE_USER = API_BASE_V1_INTERNAL + "/user/create";
-        public static final String API_GET_USER = API_BASE_V1_INTERNAL + "/user";
-    }
 }

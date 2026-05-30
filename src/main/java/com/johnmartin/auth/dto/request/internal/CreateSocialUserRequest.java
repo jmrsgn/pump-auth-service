@@ -1,4 +1,4 @@
-package com.johnmartin.auth.dto.request;
+package com.johnmartin.auth.dto.request.internal;
 
 import com.johnmartin.auth.constants.error.ValidationErrorConstants;
 

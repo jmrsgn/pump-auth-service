@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.johnmartin.auth.constants.api.ApiConstants;
 import com.johnmartin.auth.constants.error.AuthErrorConstants;
-import com.johnmartin.auth.dto.response.ApiErrorResponse;
-import com.johnmartin.auth.dto.response.Result;
+import com.johnmartin.auth.dto.common.ApiErrorResponse;
+import com.johnmartin.auth.dto.common.Result;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

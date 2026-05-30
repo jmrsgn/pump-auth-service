@@ -6,8 +6,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.johnmartin.auth.dto.response.ApiErrorResponse;
-import com.johnmartin.auth.dto.response.Result;
+import com.johnmartin.auth.dto.common.ApiErrorResponse;
+import com.johnmartin.auth.dto.common.Result;
 import com.johnmartin.auth.utilities.LoggerUtility;
 import com.johnmartin.auth.utils.ApiResponseUtils;
 

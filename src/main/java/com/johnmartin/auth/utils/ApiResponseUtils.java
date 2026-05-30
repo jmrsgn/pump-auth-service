@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.johnmartin.auth.constants.api.ApiConstants;
-import com.johnmartin.auth.dto.response.ApiErrorResponse;
-import com.johnmartin.auth.dto.response.Result;
+import com.johnmartin.auth.dto.common.ApiErrorResponse;
+import com.johnmartin.auth.dto.common.Result;
 
 public class ApiResponseUtils {
 

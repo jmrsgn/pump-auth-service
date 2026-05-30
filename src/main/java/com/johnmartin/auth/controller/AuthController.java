@@ -10,7 +10,7 @@ import com.johnmartin.auth.constants.api.ApiConstants;
 import com.johnmartin.auth.dto.request.LoginRequest;
 import com.johnmartin.auth.dto.request.RegisterRequest;
 import com.johnmartin.auth.dto.response.AuthResponse;
-import com.johnmartin.auth.dto.response.Result;
+import com.johnmartin.auth.dto.common.Result;
 import com.johnmartin.auth.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;

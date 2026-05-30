@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import com.johnmartin.auth.constants.SecurityConstants;
-import com.johnmartin.auth.constants.api.ApiConstants;
+import com.johnmartin.auth.constants.api.ExternalServiceConstants;
 import com.johnmartin.auth.constants.error.ExternalServiceErrorConstants;
-import com.johnmartin.auth.dto.request.CreateSocialUserRequest;
-import com.johnmartin.auth.dto.response.Result;
-import com.johnmartin.auth.dto.response.SocialUserResponse;
+import com.johnmartin.auth.dto.common.Result;
+import com.johnmartin.auth.dto.request.internal.CreateSocialUserRequest;
+import com.johnmartin.auth.dto.response.internal.SocialUserResponse;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
 @Service
@@ -31,7 +31,7 @@ public class SocialServiceClient {
 
         try {
             Result<SocialUserResponse> result = socialServiceRestClient.post()
-                                                                       .uri(ApiConstants.PumpSocialService.API_CREATE_USER)
+                                                                       .uri(ExternalServiceConstants.PumpSocialService.API_CREATE_USER)
                                                                        .header(SecurityConstants.HttpHeaders.REQUEST_ID,
                                                                                requestId)
                                                                        .body(request)
@@ -57,7 +57,7 @@ public class SocialServiceClient {
 
         try {
             Result<SocialUserResponse> result = socialServiceRestClient.get()
-                                                                       .uri(ApiConstants.PumpSocialService.API_GET_USER
+                                                                       .uri(ExternalServiceConstants.PumpSocialService.API_USER_INTERNAL
                                                                             + "/" + userId)
                                                                        .header(SecurityConstants.HttpHeaders.REQUEST_ID,
                                                                                requestId)

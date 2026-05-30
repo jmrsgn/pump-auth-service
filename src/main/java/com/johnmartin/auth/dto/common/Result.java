@@ -1,4 +1,4 @@
-package com.johnmartin.auth.dto.response;
+package com.johnmartin.auth.dto.common;
 
 import java.util.Optional;
 
