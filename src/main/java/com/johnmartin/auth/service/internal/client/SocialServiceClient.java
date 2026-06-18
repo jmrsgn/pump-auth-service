@@ -57,7 +57,7 @@ public class SocialServiceClient {
 
         try {
             Result<SocialUserResponse> result = socialServiceRestClient.get()
-                                                                       .uri(ExternalServiceConstants.PumpSocialService.API_USER_INTERNAL
+                                                                       .uri(ExternalServiceConstants.PumpSocialService.API_USERS
                                                                             + "/" + userId)
                                                                        .header(SecurityConstants.HttpHeaders.REQUEST_ID,
                                                                                requestId)
