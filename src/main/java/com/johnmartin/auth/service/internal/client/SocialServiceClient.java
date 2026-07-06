@@ -1,6 +1,8 @@
 package com.johnmartin.auth.service.internal.client;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -18,9 +20,12 @@ public class SocialServiceClient {
     private static final Class<SocialServiceClient> clazz = SocialServiceClient.class;
 
     private final RestClient socialServiceRestClient;
+    private final String internalServiceToken;
 
-    public SocialServiceClient(RestClient socialServiceRestClient) {
+    public SocialServiceClient(RestClient socialServiceRestClient,
+                               @Value("${pump.security.internal-service-token}") String internalServiceToken) {
         this.socialServiceRestClient = socialServiceRestClient;
+        this.internalServiceToken = internalServiceToken;
     }
 
     public SocialUserResponse createUser(String requestId, CreateSocialUserRequest request) {
@@ -49,9 +54,10 @@ public class SocialServiceClient {
         }
     }
 
-    public SocialUserResponse getSocialUser(String requestId, String userId) {
+    public SocialUserResponse getSocialUser(String currentUserId, String requestId, String userId) {
         LoggerUtility.d(clazz,
-                        String.format("Execute method: [getSocialUser] requestId: [%s] userId: [%s]",
+                        String.format("Execute method: [getSocialUser] currentUserId: [%s] requestId: [%s] userId: [%s]",
+                                      currentUserId,
                                       requestId,
                                       userId));
 
@@ -59,6 +65,11 @@ public class SocialServiceClient {
             Result<SocialUserResponse> result = socialServiceRestClient.get()
                                                                        .uri(ExternalServiceConstants.PumpSocialService.API_USERS
                                                                             + "/" + userId)
+                                                                       .header(HttpHeaders.AUTHORIZATION,
+                                                                               SecurityConstants.HttpHeaders.BEARER
+                                                                                                          + internalServiceToken)
+                                                                       .header(SecurityConstants.HttpHeaders.USER_ID,
+                                                                               currentUserId)
                                                                        .header(SecurityConstants.HttpHeaders.REQUEST_ID,
                                                                                requestId)
                                                                        .retrieve()

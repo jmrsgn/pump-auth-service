@@ -13,9 +13,9 @@ import com.johnmartin.auth.constants.error.SystemErrorConstants;
 import com.johnmartin.auth.constants.error.UserErrorConstants;
 import com.johnmartin.auth.constants.error.ValidationErrorConstants;
 import com.johnmartin.auth.constants.view.ViewAttributes;
-import com.johnmartin.auth.dto.request.internal.CreateSocialUserRequest;
 import com.johnmartin.auth.dto.request.LoginRequest;
 import com.johnmartin.auth.dto.request.RegisterRequest;
+import com.johnmartin.auth.dto.request.internal.CreateSocialUserRequest;
 import com.johnmartin.auth.dto.response.AuthResponse;
 import com.johnmartin.auth.dto.response.internal.SocialUserResponse;
 import com.johnmartin.auth.entity.UserEntity;
@@ -147,7 +147,7 @@ public class AuthService {
         SocialUserResponse socialUser;
         try {
             String requestId = (String) request.getAttribute(SecurityConstants.HttpHeaders.REQUEST_ID);
-            socialUser = socialServiceClient.getSocialUser(requestId, user.getId().toString());
+            socialUser = socialServiceClient.getSocialUser(user.getId().toString(), requestId, user.getId().toString());
         } catch (Exception e) {
             throw new NotFoundException(e.getMessage());
         }
