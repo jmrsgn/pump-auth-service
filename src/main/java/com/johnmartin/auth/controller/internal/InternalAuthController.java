@@ -38,8 +38,8 @@ public class InternalAuthController {
     @PostMapping(ApiConstants.InternalPath.VALIDATE)
     public ResponseEntity<Result<UserResponse>> validateToken(@RequestHeader(org.springframework.http.HttpHeaders.AUTHORIZATION) String authorizationHeader,
                                                               @RequestHeader(value = SecurityConstants.HttpHeaders.REQUEST_ID, required = false) String requestId) {
-        LoggerUtility.d(clazz, "Execute method: [validateToken]");
         if (StringUtils.isBlank(requestId)) {
+            LoggerUtility.d(clazz, "requestId is blank, will generate new");
             requestId = UUID.randomUUID().toString();
         }
 
@@ -47,7 +47,7 @@ public class InternalAuthController {
         MDC.put(SecurityConstants.HttpHeaders.REQUEST_ID, requestId);
 
         try {
-            String token = authorizationHeader.replace("Bearer ", StringUtils.EMPTY);
+            String token = authorizationHeader.replace(SecurityConstants.HttpHeaders.BEARER, StringUtils.EMPTY);
             String userId = jwtUtil.extractUserId(token);
             UserEntity user = userService.findById(UUID.fromString(userId));
             return ResponseEntity.ok(Result.success(UserMapper.toResponse(user)));

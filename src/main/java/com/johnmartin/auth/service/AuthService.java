@@ -22,7 +22,10 @@ import com.johnmartin.auth.entity.UserEntity;
 import com.johnmartin.auth.enums.UserRole;
 import com.johnmartin.auth.enums.VerificationStatus;
 import com.johnmartin.auth.events.AuthUserCreatedEvent;
-import com.johnmartin.auth.exceptions.*;
+import com.johnmartin.auth.exceptions.BadRequestException;
+import com.johnmartin.auth.exceptions.ConflictException;
+import com.johnmartin.auth.exceptions.ForbiddenException;
+import com.johnmartin.auth.exceptions.UnauthorizedException;
 import com.johnmartin.auth.security.JwtUtil;
 import com.johnmartin.auth.service.internal.client.SocialServiceClient;
 import com.johnmartin.auth.utilities.LoggerUtility;
@@ -64,7 +67,7 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse register(HttpServletRequest request, RegisterRequest registerRequest) {
-        LoggerUtility.d(clazz, String.format("Execute method: [register] request: [%s]", request));
+        LoggerUtility.d(clazz, "Execute method: [register]");
 
         if (request == null) {
             throw new BadRequestException(SystemErrorConstants.INVALID_REQUEST);
@@ -105,7 +108,9 @@ public class AuthService {
                                                                                           createdUser.getFirstName(),
                                                                                           createdUser.getLastName(),
                                                                                           createdUser.getEmail());
-            socialUser = socialServiceClient.createUser(requestId, createSocialUserRequest);
+            socialUser = socialServiceClient.createUser(createdUser.getId().toString(),
+                                                        requestId,
+                                                        createSocialUserRequest);
             LoggerUtility.d(clazz, "Social user created");
         } catch (Exception e) {
             // When creating of social user fails, delete auth user
@@ -124,7 +129,7 @@ public class AuthService {
      * @return AuthResponse
      */
     public AuthResponse login(HttpServletRequest request, LoginRequest loginRequest) {
-        LoggerUtility.d(clazz, String.format("Execute method: [login] request: [%s]", request));
+        LoggerUtility.d(clazz, "Execute method: [login]");
 
         if (request == null) {
             throw new BadRequestException(SystemErrorConstants.INVALID_REQUEST);
@@ -144,14 +149,13 @@ public class AuthService {
             throw new ForbiddenException(UserErrorConstants.USER_ACCOUNT_IS_NOT_YET_ACTIVATED);
         }
 
-        SocialUserResponse socialUser;
-        try {
-            String requestId = (String) request.getAttribute(SecurityConstants.HttpHeaders.REQUEST_ID);
-            socialUser = socialServiceClient.getSocialUser(user.getId().toString(), requestId, user.getId().toString());
-        } catch (Exception e) {
-            throw new NotFoundException(e.getMessage());
-        }
+        LoggerUtility.d(clazz, "Getting social user profile");
 
+        SocialUserResponse socialUser;
+        String requestId = (String) request.getAttribute(SecurityConstants.HttpHeaders.REQUEST_ID);
+        socialUser = socialServiceClient.getSocialUser(user.getId().toString(), requestId);
+
+        LoggerUtility.d(clazz, "Generating token");
         String token = jwtUtil.generateToken(socialUser.id());
         LoggerUtility.d(clazz, "Token created");
         return new AuthResponse(token, socialUser, jwtUtil.getExpirationSeconds());

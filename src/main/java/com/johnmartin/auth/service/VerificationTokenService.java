@@ -54,6 +54,8 @@ public class VerificationTokenService {
         VerificationTokenEntity verificationToken = verificationTokenRepository.findByToken(token)
                                                                                .orElseThrow(() -> new NotFoundException(AuthErrorConstants.INVALID_TOKEN));
 
+        LoggerUtility.d(clazz, "Verification token is valid, will continue to validate");
+
         if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new BadRequestException(AuthErrorConstants.TOKEN_IS_EXPIRED);
         }

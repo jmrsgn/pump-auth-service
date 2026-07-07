@@ -12,6 +12,7 @@ import com.johnmartin.auth.constants.error.ExternalServiceErrorConstants;
 import com.johnmartin.auth.dto.common.Result;
 import com.johnmartin.auth.dto.request.internal.CreateSocialUserRequest;
 import com.johnmartin.auth.dto.response.internal.SocialUserResponse;
+import com.johnmartin.auth.exceptions.NotFoundException;
 import com.johnmartin.auth.utilities.LoggerUtility;
 
 @Service
@@ -28,15 +29,21 @@ public class SocialServiceClient {
         this.internalServiceToken = internalServiceToken;
     }
 
-    public SocialUserResponse createUser(String requestId, CreateSocialUserRequest request) {
+    public SocialUserResponse createUser(String currentUserId, String requestId, CreateSocialUserRequest request) {
         LoggerUtility.d(clazz,
-                        String.format("Execute method: [createUser] requestId: [%s] request: [%s]",
+                        String.format("Execute method: [createUser] currentUserId: [%s] requestId: [%s] request: [%s]",
+                                      currentUserId,
                                       requestId,
                                       request));
 
         try {
             Result<SocialUserResponse> result = socialServiceRestClient.post()
                                                                        .uri(ExternalServiceConstants.PumpSocialService.API_CREATE_USER)
+                                                                       .header(HttpHeaders.AUTHORIZATION,
+                                                                               SecurityConstants.HttpHeaders.BEARER
+                                                                                                          + internalServiceToken)
+                                                                       .header(SecurityConstants.HttpHeaders.USER_ID,
+                                                                               currentUserId)
                                                                        .header(SecurityConstants.HttpHeaders.REQUEST_ID,
                                                                                requestId)
                                                                        .body(request)
@@ -54,17 +61,16 @@ public class SocialServiceClient {
         }
     }
 
-    public SocialUserResponse getSocialUser(String currentUserId, String requestId, String userId) {
+    public SocialUserResponse getSocialUser(String currentUserId, String requestId) {
         LoggerUtility.d(clazz,
-                        String.format("Execute method: [getSocialUser] currentUserId: [%s] requestId: [%s] userId: [%s]",
+                        String.format("Execute method: [getSocialUser] currentUserId: [%s] requestId: [%s]",
                                       currentUserId,
-                                      requestId,
-                                      userId));
+                                      requestId));
 
         try {
             Result<SocialUserResponse> result = socialServiceRestClient.get()
                                                                        .uri(ExternalServiceConstants.PumpSocialService.API_USERS
-                                                                            + "/" + userId)
+                                                                            + "/" + currentUserId)
                                                                        .header(HttpHeaders.AUTHORIZATION,
                                                                                SecurityConstants.HttpHeaders.BEARER
                                                                                                           + internalServiceToken)
@@ -77,7 +83,7 @@ public class SocialServiceClient {
                                                                        });
 
             if (result == null || result.getData().isEmpty()) {
-                throw new RuntimeException(ExternalServiceErrorConstants.SOCIAL_USER_NOT_FOUND);
+                throw new NotFoundException(ExternalServiceErrorConstants.SOCIAL_USER_NOT_FOUND);
             }
 
             return result.getData().get();

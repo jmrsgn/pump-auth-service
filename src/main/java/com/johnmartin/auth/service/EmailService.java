@@ -18,7 +18,7 @@ import jakarta.mail.internet.MimeMessage;
 public class EmailService {
 
     private static final Class<EmailService> clazz = EmailService.class;
-    private final static String SUBJECT = "Verify your account";
+    private static final String SUBJECT = "Verify your account";
 
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine springTemplateEngine;
@@ -30,11 +30,11 @@ public class EmailService {
 
     public void sendVerificationEmail(String email, String link) {
         LoggerUtility.d(clazz, "Execute method: [sendVerificationEmail]");
-        if (email == null || StringUtils.isBlank(email)) {
+        if (StringUtils.isBlank(email)) {
             throw new IllegalArgumentException(ValidationErrorConstants.EMAIL_IS_REQUIRED);
         }
 
-        if (link == null || link.isBlank()) {
+        if (StringUtils.isBlank(link)) {
             throw new IllegalArgumentException(ValidationErrorConstants.VERIFICATION_LINK_IS_REQUIRED);
         }
 

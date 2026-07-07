@@ -1,5 +1,6 @@
 package com.johnmartin.auth.listeners;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -28,7 +29,7 @@ public class AuthUserCreatedListener {
     public void handleUserRegistered(AuthUserCreatedEvent event) {
         // This method is automatically called by Spring using the event publisher
         LoggerUtility.d(clazz, "Execute method: [handleUserRegistered]");
-        if (event == null || event.userId() == null || event.email() == null) {
+        if (event == null || event.userId() == null || StringUtils.isBlank(event.email())) {
             throw new IllegalArgumentException(SystemErrorConstants.INVALID_EVENT_DATA);
         }
 

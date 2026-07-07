@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.johnmartin.auth.constants.SecurityConstants;
 import com.johnmartin.auth.security.JwtUtil;
 
 import jakarta.servlet.FilterChain;
@@ -35,13 +36,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (StringUtils.isBlank(header) || !header.startsWith("Bearer ")) {
+        if (StringUtils.isBlank(header) || !header.startsWith(SecurityConstants.HttpHeaders.BEARER)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         // Extract the JWT token from the Authorization header and retrieve the email from it
-        String token = StringUtils.substringAfter(header, "Bearer ");
+        String token = StringUtils.substringAfter(header, SecurityConstants.HttpHeaders.BEARER);
         String email = jwtUtil.extractUserId(token);
 
         // Check that the username exists, and no authentication is currently set in the security context,
