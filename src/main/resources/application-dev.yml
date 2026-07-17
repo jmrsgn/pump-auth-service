@@ -1,10 +1,13 @@
 server:
   port: 8081
 
-social:
-  service:
-    url: http://localhost:8080
+# Services
+external-services:
+  social:
+    service:
+      url: http://localhost:8080
 
+# Postgres
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/pump_auth
@@ -19,6 +22,7 @@ spring:
       ddl-auto: update
     show-sql: false
 
+# Logging
 logging:
   level:
     com.johnmartin.auth: TRACE
