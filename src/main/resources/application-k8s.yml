@@ -9,8 +9,7 @@ spring:
 # Services
 external-services:
   social:
-    service:
-      url: http://pump-social-service:8080
+    url: http://pump-social-service:8080
 
 # Logging
 logging:
