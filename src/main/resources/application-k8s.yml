@@ -6,6 +6,13 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: 30s
 
+  # Email
+  # Disable Mail Health Indicator
+  management:
+    health:
+      mail:
+        enabled: false
+
 # Services
 external-services:
   social:
