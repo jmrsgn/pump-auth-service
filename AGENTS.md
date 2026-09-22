@@ -111,7 +111,7 @@ Do not trust client-provided authentication or identity claims merely because th
 
 Authentication decisions must be established by trusted server-side behavior.
 
-Do not move authentication authority into the Flutter application, Social Service, Coaching Service, or another consumer.
+Do not move authentication authority into client applications, the Social Service, the Coaching Service, or another consumer.
 
 ---
 
